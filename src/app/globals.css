@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---- Brand: fresh leaf green ---- */
+  --color-leaf-50: #f3faea;
+  --color-leaf-100: #e4f5cd;
+  --color-leaf-200: #cdeca1;
+  --color-leaf-300: #b4e478;
+  --color-leaf-400: #9bd94e;
+  --color-leaf-500: #7cc93b;
+  --color-leaf-600: #5faa28;
+  --color-leaf-700: #47831f;
+  --color-leaf-800: #33601a;
+  --color-leaf-900: #1e3a0e;
+
+  /* ---- Ink: warm near-black through muted grey ---- */
+  --color-ink-900: #161914;
+  --color-ink-800: #22261f;
+  --color-ink-700: #33382f;
+  --color-ink-600: #4b5145;
+  --color-ink-500: #6b7265;
+  --color-ink-400: #949a8f;
+  --color-ink-300: #c2c7bd;
+  --color-ink-200: #e0e3dc;
+  --color-ink-100: #eff1ec;
+
+  /* ---- Surfaces ---- */
+  --color-canvas: #eceee8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f6f7f3;
+
+  /* ---- Semantic (case status) ---- */
+  --color-flag-500: #e0673a;
+  --color-flag-100: #fbe8df;
+  --color-caution-500: #d9a520;
+  --color-caution-100: #faf0d3;
+
+  /* ---- Type ---- */
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* ---- Radii: the reference leans on very soft, large corners ---- */
+  --radius-card: 1.5rem;
+  --radius-card-lg: 2rem;
+  --radius-shell: 2.5rem;
+
+  /* ---- Motion ---- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink-800);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headline treatment used across the marketing surface: dark first clause,
+   green gradient second clause. */
+@utility text-gradient-leaf {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-leaf-600) 0%,
+    var(--color-leaf-400) 45%,
+    var(--color-leaf-300) 100%
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+/* Fine film grain — keeps the large flat green fields from banding. */
+@utility grain {
+  position: relative;
+}
+@utility grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes trace-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+@utility animate-float-soft {
+  animation: float-soft 7s var(--ease-out-soft) infinite;
+}
+
+@utility animate-rise-in {
+  animation: rise-in 0.7s var(--ease-out-soft) both;
+}
+
+@utility animate-trace-pulse {
+  animation: trace-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: var(--color-leaf-200);
+  color: var(--color-ink-900);
+}

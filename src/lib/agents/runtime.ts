@@ -2,6 +2,7 @@ import "server-only";
 import { z } from "zod";
 import {
   generateStructured,
+  type Attachment,
   type ModelTier,
   type TokenUsage,
 } from "@/lib/gemini/client";
@@ -26,6 +27,8 @@ export type AgentDefinition<TInput, TOutput> = {
   system: string;
   output: z.ZodType<TOutput>;
   prompt: (input: TInput) => string;
+  /** Files handed to the model directly, for agents that read raw uploads. */
+  attachments?: (input: TInput) => Attachment[];
   temperature?: number;
   maxOutputTokens?: number;
   /** Schema-repair attempts before the agent is declared failed. */
@@ -110,6 +113,7 @@ export async function runAgent<TInput, TOutput>(
   const maxRepairs = def.maxRepairs ?? 1;
   const schema = geminiSchemaFor(def.output);
   const basePrompt = def.prompt(input);
+  const attachments = def.attachments?.(input);
 
   ctx.trace.push({
     type: "agent_started",
@@ -131,6 +135,7 @@ export async function runAgent<TInput, TOutput>(
         system: def.system,
         prompt,
         schema,
+        attachments,
         temperature: def.temperature,
         maxOutputTokens: def.maxOutputTokens,
         signal: ctx.signal,

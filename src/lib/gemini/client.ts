@@ -70,11 +70,20 @@ export type GenerateResult = {
   attempts: number;
 };
 
+/** A user upload passed to the model directly — a scan, a photo, or a PDF. */
+export type Attachment = {
+  mimeType: string;
+  /** Base64 payload without a data: prefix. */
+  data: string;
+};
+
 export type GenerateOptions = {
   tier: ModelTier;
   system: string;
   prompt: string;
   schema: GeminiSchema;
+  /** Sent before the prompt, which is the ordering the model reads best. */
+  attachments?: Attachment[];
   temperature?: number;
   maxOutputTokens?: number;
   signal?: AbortSignal;
@@ -119,6 +128,7 @@ export async function generateStructured(
     system,
     prompt,
     schema,
+    attachments,
     temperature = tier === "reasoning" ? 0.35 : 0.1,
     maxOutputTokens = 8192,
     signal,
@@ -129,13 +139,27 @@ export async function generateStructured(
   const model = modelFor(tier);
   const startedAt = Date.now();
 
+  const contents = attachments?.length
+    ? [
+        {
+          role: "user",
+          parts: [
+            ...attachments.map((a) => ({
+              inlineData: { mimeType: a.mimeType, data: a.data },
+            })),
+            { text: prompt },
+          ],
+        },
+      ]
+    : prompt;
+
   let lastError: GeminiRequestError | null = null;
 
   for (let attempt = 1; attempt <= maxRetries + 1; attempt += 1) {
     try {
       const response = await ai.models.generateContent({
         model,
-        contents: prompt,
+        contents,
         config: {
           systemInstruction: system,
           responseMimeType: "application/json",

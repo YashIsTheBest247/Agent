@@ -57,6 +57,41 @@ export type CoverageFinding = z.infer<typeof coverageFinding>;
 
 export const argumentStrength = z.enum(["load_bearing", "supporting", "weak"]);
 
+/**
+ * Where a supporting point comes from, which decides how it may be used.
+ *
+ * A point grounded in an uploaded document can be quoted. A point that rests on
+ * general clinical practice cannot — the draft must present it as the standard
+ * it is, not dress it up as something the record says.
+ */
+export const evidenceSource = z.enum(["document", "clinical_standard"]);
+
+export const evidencePoint = z.object({
+  claim: z.string().describe("the supporting proposition, in one sentence"),
+  source: evidenceSource,
+  citationIds: z
+    .array(z.string())
+    .describe("empty when source is clinical_standard"),
+  strength: argumentStrength,
+});
+export type EvidencePoint = z.infer<typeof evidencePoint>;
+
+export const evidenceFinding = z.object({
+  clinicalSummary: z
+    .string()
+    .describe(
+      "what the records establish about this patient and this service, or a statement that no clinical records were provided",
+    ),
+  points: z.array(evidencePoint),
+  citations: z.array(citation).describe("citations backing the document-sourced points"),
+  missingRecords: z
+    .array(z.string())
+    .describe(
+      "specific documents that would materially strengthen the appeal, named concretely enough to request",
+    ),
+});
+export type EvidenceFinding = z.infer<typeof evidenceFinding>;
+
 export const appealArgument = z.object({
   heading: z.string().describe("short label for this line of argument"),
   claim: z.string().describe("what this argument asserts, in one sentence"),
@@ -146,6 +181,38 @@ export const reviewVerdict = z.object({
   confidence,
 });
 export type ReviewVerdict = z.infer<typeof reviewVerdict>;
+
+export const filingChecklistItem = z.object({
+  item: z.string().describe("one concrete thing the user must do or attach"),
+  /** True when the pipeline already produced it; false when the user must act. */
+  readyAlready: z.boolean(),
+  note: z.string().describe("where to get it, or why it matters"),
+});
+
+export const filingReminder = z.object({
+  date: z.string().describe("ISO date"),
+  label: z.string().describe("what to do on that date"),
+});
+
+export const filingPacket = z.object({
+  submissionRoute: z
+    .string()
+    .describe(
+      "how to actually send this, taken from the letter's instructions, or a marked placeholder if the letter is silent",
+    ),
+  recipient: z.string().describe("who it goes to, or a marked placeholder"),
+  checklist: z.array(filingChecklistItem),
+  reminders: z.array(filingReminder),
+  nextEscalation: z
+    .string()
+    .describe("what to do if this level fails, and by when"),
+  callScript: z
+    .string()
+    .describe(
+      "a short script for phoning the payer to confirm receipt and status, including what to ask for and what to write down",
+    ),
+});
+export type FilingPacket = z.infer<typeof filingPacket>;
 
 /** Deterministic output of the citation auditor. Not model-generated. */
 export type AuditReport = {

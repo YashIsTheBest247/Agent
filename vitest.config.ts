@@ -1,0 +1,17 @@
+import { defineConfig } from "vitest/config";
+import { fileURLToPath } from "node:url";
+
+const src = fileURLToPath(new URL("./src", import.meta.url));
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      "server-only": `${src}/test/empty-module.ts`,
+      "@": src,
+    },
+  },
+  test: {
+    environment: "node",
+    include: ["src/**/*.test.ts"],
+  },
+});

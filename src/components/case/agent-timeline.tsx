@@ -19,30 +19,30 @@ const marks: Record<
   TraceEventType,
   { icon: LucideIcon; ring: string; fill: string }
 > = {
-  run_started: { icon: Flag, ring: "ring-ink-200", fill: "bg-white text-ink-500" },
+  run_started: { icon: Flag, ring: "ring-[var(--line)]", fill: "bg-white text-[var(--text-2)]" },
   agent_started: {
     icon: CircleDashed,
-    ring: "ring-leaf-300",
-    fill: "bg-leaf-50 text-leaf-700",
+    ring: "ring-[var(--lime-deep)]",
+    fill: "bg-[var(--lime-wash)] text-[var(--ok-deep)]",
   },
   agent_finished: {
     icon: Check,
-    ring: "ring-leaf-400",
-    fill: "bg-leaf-500 text-white",
+    ring: "ring-[var(--lime-deep)]",
+    fill: "bg-[var(--lime)] text-white",
   },
   agent_repaired: {
     icon: RefreshCw,
-    ring: "ring-caution-500/40",
-    fill: "bg-caution-100 text-caution-500",
+    ring: "ring-[var(--risk-amber)]/40",
+    fill: "bg-[var(--risk-amber-wash)] text-[var(--risk-amber)]",
   },
-  agent_failed: { icon: X, ring: "ring-flag-500/40", fill: "bg-flag-100 text-flag-500" },
-  note: { icon: Info, ring: "ring-ink-200", fill: "bg-white text-ink-500" },
+  agent_failed: { icon: X, ring: "ring-[var(--risk-red)]/40", fill: "bg-[var(--risk-red-wash)] text-[var(--risk-red)]" },
+  note: { icon: Info, ring: "ring-[var(--line)]", fill: "bg-white text-[var(--text-2)]" },
   blocked: {
     icon: AlertTriangle,
-    ring: "ring-caution-500/40",
-    fill: "bg-caution-100 text-caution-500",
+    ring: "ring-[var(--risk-amber)]/40",
+    fill: "bg-[var(--risk-amber-wash)] text-[var(--risk-amber)]",
   },
-  run_finished: { icon: Flag, ring: "ring-ink-300", fill: "bg-ink-900 text-white" },
+  run_finished: { icon: Flag, ring: "ring-[var(--text-3)]", fill: "bg-[var(--ink)] text-white" },
 };
 
 function relative(at: string, from: string | null): string {
@@ -66,7 +66,7 @@ function TimelineRow({
 
   return (
     <li className="relative flex gap-3.5 pb-5 last:pb-0">
-      <span className="absolute top-7 bottom-0 left-[13px] w-px bg-ink-200" aria-hidden />
+      <span className="absolute top-7 bottom-0 left-[13px] w-px bg-[var(--line)]" aria-hidden />
       <span
         className={cn(
           "relative z-10 flex h-[27px] w-[27px] shrink-0 items-center justify-center rounded-full ring-1",
@@ -81,14 +81,14 @@ function TimelineRow({
       <div className="min-w-0 flex-1 pt-0.5">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
           {event.agentName ? (
-            <span className="text-[13px] font-semibold text-ink-900">
+            <span className="text-[13px] font-semibold text-[var(--ink)]">
               {event.agentName}
             </span>
           ) : null}
-          <span className="text-[13px] text-ink-600">{event.message}</span>
+          <span className="text-[13px] text-[var(--text-2)]">{event.message}</span>
         </div>
 
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-400">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[var(--text-3)]">
           <span>{relative(event.at, startedAt)}</span>
           {event.durationMs ? <span>{(event.durationMs / 1000).toFixed(1)}s</span> : null}
           {event.usage?.total ? (
@@ -98,7 +98,7 @@ function TimelineRow({
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
-              className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-900"
+              className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[var(--text-2)] transition-colors hover:bg-[var(--paper-2)] hover:text-[var(--ink)]"
               aria-expanded={open}
             >
               {open ? "Hide" : "Detail"}
@@ -110,11 +110,11 @@ function TimelineRow({
         </div>
 
         {open && hasDetail ? (
-          <div className="mt-2 rounded-2xl bg-surface-muted p-3 ring-1 ring-ink-200/60">
+          <div className="mt-2 rounded-2xl bg-[var(--paper)] p-3 ring-1 ring-[var(--line)]">
             {Object.entries(event.detail ?? {}).map(([key, value]) => (
               <div key={key} className="text-[12px] leading-relaxed">
-                <span className="font-semibold text-ink-700">{key}: </span>
-                <span className="whitespace-pre-wrap text-ink-600">
+                <span className="font-semibold text-[var(--text)]">{key}: </span>
+                <span className="whitespace-pre-wrap text-[var(--text-2)]">
                   {typeof value === "string" ? value : JSON.stringify(value, null, 2)}
                 </span>
               </div>
@@ -138,7 +138,7 @@ export function AgentTimeline({ events }: { events: TraceEvent[] }) {
 
   if (events.length === 0) {
     return (
-      <p className="text-[13px] text-ink-400">
+      <p className="text-[13px] text-[var(--text-3)]">
         The run has not started yet.
       </p>
     );

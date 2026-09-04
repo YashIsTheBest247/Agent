@@ -2,29 +2,25 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "ink" | "leaf" | "outline" | "ghost" | "white";
+type Variant = "lime" | "ink" | "ghost" | "quiet";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
-  ink: "bg-ink-900 text-white hover:bg-ink-800 shadow-[0_1px_2px_rgba(22,25,20,0.28),0_8px_24px_-12px_rgba(22,25,20,0.5)]",
-  leaf: "bg-leaf-500 text-ink-900 hover:bg-leaf-400 shadow-[0_1px_2px_rgba(71,131,31,0.3),0_10px_28px_-14px_rgba(95,170,40,0.8)]",
-  outline:
-    "border border-ink-200 bg-white/70 text-ink-800 hover:border-ink-300 hover:bg-white",
-  ghost: "text-ink-600 hover:bg-ink-100 hover:text-ink-900",
-  white: "bg-white text-ink-900 hover:bg-ink-100 shadow-sm",
+  lime: "pill-lime",
+  ink: "pill-ink",
+  ghost: "pill-ghost",
+  quiet:
+    "border border-transparent text-[var(--text-2)] hover:text-[var(--ink)]",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-4 text-[13px]",
-  md: "h-11 px-6 text-sm",
-  lg: "h-[52px] px-8 text-[15px]",
+  sm: "px-3.5 py-2 text-[11px]",
+  md: "px-5 py-2.5 text-[11.5px]",
+  lg: "px-7 py-3.5 text-[12.5px]",
 };
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.01em] " +
-  "transition-all duration-200 ease-[var(--ease-out-soft)] active:scale-[0.98] " +
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-leaf-600 focus-visible:ring-offset-2 " +
-  "focus-visible:ring-offset-canvas disabled:pointer-events-none disabled:opacity-50";
+  "press pill justify-center disabled:pointer-events-none disabled:opacity-45";
 
 type ButtonProps = ComponentProps<"button"> & {
   variant?: Variant;

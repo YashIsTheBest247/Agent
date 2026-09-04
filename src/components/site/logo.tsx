@@ -1,56 +1,81 @@
 import { cn } from "@/lib/utils";
 
 /**
- * The mark is a leaf whose midrib is a rising line — growth, and a claim
- * turned back over. Kept as inline SVG so it inherits currentColor.
+ * A lime tile carrying a sheet of paper and the arrow that turns it back over.
+ * Sized in a 32-unit box so it stays crisp at nav and favicon scale.
  */
-export function LogoMark({ className }: { className?: string }) {
+export function LogoMark({
+  className,
+  tile = "var(--lime)",
+  glyph = "var(--ink)",
+}: {
+  className?: string;
+  tile?: string;
+  glyph?: string;
+}) {
   return (
     <svg
-      viewBox="0 0 24 24"
+      width="26"
+      height="26"
+      viewBox="0 0 32 32"
       fill="none"
-      aria-hidden="true"
-      className={cn("h-6 w-6", className)}
+      role="img"
+      aria-label="Overturn"
+      className={className}
     >
-      <path
-        d="M20.5 3.5C20.5 3.5 8.8 2.2 5 6c-3.1 3.1-2.6 8.6.6 11.7 3.2 3.1 8.7 3.4 11.7.4 3.8-3.8 3.2-14.6 3.2-14.6Z"
-        fill="currentColor"
-        fillOpacity="0.16"
-      />
-      <path
-        d="M20.5 3.5C20.5 3.5 8.8 2.2 5 6c-3.1 3.1-2.6 8.6.6 11.7 3.2 3.1 8.7 3.4 11.7.4 3.8-3.8 3.2-14.6 3.2-14.6Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3.5 20.5 12 12m0 0h-4m4 0v4"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <rect x="1.5" y="1.5" width="29" height="29" rx="7" fill={tile} />
+      <g fill={glyph}>
+        {/* The denial letter. */}
+        <path d="M9 6.6h9.6L23 11v9.2a1.2 1.2 0 0 1-1.2 1.2H9a1.2 1.2 0 0 1-1.2-1.2V7.8A1.2 1.2 0 0 1 9 6.6Z" opacity="0.28" />
+        <path
+          d="M9.4 7.8h8.4l3.8 3.8v8.2H9.4V7.8Z"
+          stroke={glyph}
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+          fill="none"
+        />
+        {/* The turn. */}
+        <path
+          d="M11.6 25.4a6 6 0 0 0 9.9-3.1"
+          stroke={glyph}
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+        />
+        <path d="M9.2 22.2 14 23.4l-2.2 3.4-2.6-4.6Z" />
+      </g>
     </svg>
   );
 }
 
 export function Logo({
   className,
-  wordmarkClassName,
+  tone = "ink",
 }: {
   className?: string;
-  wordmarkClassName?: string;
+  /** `light` for the transparent header sitting over the hero photograph. */
+  tone?: "ink" | "light";
 }) {
   return (
-    <span className={cn("inline-flex items-center gap-2", className)}>
-      <LogoMark className="h-[22px] w-[22px] text-leaf-600" />
-      <span
-        className={cn(
-          "font-sans text-[15px] font-extrabold tracking-[0.14em] text-ink-900 uppercase",
-          wordmarkClassName,
-        )}
-      >
-        Overturn
+    <span className={cn("flex items-center gap-2.5", className)}>
+      <LogoMark />
+      <span className="flex flex-col leading-none">
+        <span
+          className={cn(
+            "display text-[20px] tracking-[-0.02em]",
+            tone === "light" ? "text-[var(--lime)]" : "text-[var(--ink)]",
+          )}
+        >
+          Overturn
+        </span>
+        <span
+          className={cn(
+            "mt-0.5 hidden font-mono text-[8.5px] tracking-[0.2em] uppercase sm:block",
+            tone === "light" ? "text-white/60" : "text-[var(--text-3)]",
+          )}
+        >
+          Appeals desk
+        </span>
       </span>
     </span>
   );

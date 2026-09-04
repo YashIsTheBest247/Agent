@@ -1,109 +1,105 @@
-import { ArrowUpRight, CalendarClock, Play, ShieldCheck, Sparkles } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
-import { Pill } from "@/components/ui/pill";
-import { Grain, Scene } from "@/components/art/scene";
+import Image from "next/image";
+import Link from "next/link";
 
+/**
+ * Photograph, deep wash, then the headline in two voices — heavy grotesk for
+ * the frame, italic serif for the two words that carry the meaning.
+ *
+ * The panel is pinned to the viewport (`100svh` less the surrounding inset) and
+ * lays its content out as a column that pushes the headline to the top and the
+ * agent strip to the bottom. Nothing here is sized to "roughly fit": the
+ * container owns the height, so the first screen is always exactly one screen.
+ */
 export function Hero() {
   return (
-    <section className="relative px-3 pt-10 pb-6 sm:px-5 sm:pt-16">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col items-center text-center">
-          <Pill tone="glass" icon={<Sparkles className="h-3.5 w-3.5 text-leaf-600" />}>
-            Nine agents. One appeal.
-          </Pill>
-
-          <h1 className="mt-6 max-w-4xl font-sans text-[clamp(2.5rem,7vw,4.75rem)] leading-[0.98] font-extrabold tracking-[-0.035em] text-ink-900">
-            Get Back What
-            <br />
-            <span className="text-gradient-leaf">You&apos;re Owed</span>
-          </h1>
-
-          <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-ink-500 sm:text-base">
-            Insurers deny first and count on you giving up. Overturn reads your
-            denial letter, finds the policy language that contradicts it, and
-            drafts a citation-backed appeal — reviewed by you before a word is
-            sent.
-          </p>
-
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
-            <ButtonLink href="/cases/new" variant="ink" size="lg">
-              Start a case — free
-              <ArrowUpRight className="h-4 w-4" />
-            </ButtonLink>
-            <ButtonLink href="/#how-it-works" variant="ghost" size="lg">
-              See how it works
-            </ButtonLink>
-          </div>
+    <section id="top" className="px-3 pt-3 sm:px-5 sm:pt-5">
+      <div className="relative flex min-h-[calc(100svh-1.5rem)] flex-col overflow-hidden rounded-[var(--r-xl)] bg-[var(--deep)] sm:min-h-[calc(100svh-2.5rem)]">
+        <div className="absolute inset-0">
+          <Image
+            src="/img/hero-desk.jpg"
+            alt="A desk of insurance forms, a calculator and a cup of coffee, shot from above"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[center_45%]"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(176deg, rgba(7,66,58,0.88) 0%, rgba(6,47,42,0.66) 42%, rgba(4,26,23,0.90) 100%)",
+            }}
+          />
         </div>
 
-        {/* ---- Landscape panel with floating status cards ---- */}
-        <div className="relative mt-12 sm:mt-16">
-          <div className="relative overflow-hidden rounded-shell shadow-[0_40px_90px_-40px_rgba(30,58,14,0.55)] ring-1 ring-leaf-900/10">
-            <div className="relative aspect-[16/10] w-full sm:aspect-[2.1/1]">
-              <Scene variant="dawn" seed={1} />
-              <Grain />
-            </div>
+        {/* Column: headline block sits under the nav, agent strip pins to the floor. */}
+        <div className="relative flex flex-1 flex-col justify-between px-6 pt-24 pb-7 sm:px-14 sm:pb-9">
+          <div>
+            <h1 className="max-w-[min(100%,52rem)] [overflow-wrap:anywhere]">
+              <span className="block text-[clamp(1.8rem,min(5vw,8.2vh),4rem)] leading-[0.98]">
+                <span className="display text-[var(--lime)]">Where a </span>
+                <span className="script text-white">denial</span>
+              </span>
+              <span className="block text-[clamp(1.8rem,min(5vw,8.2vh),4rem)] leading-[0.98]">
+                <span className="display text-[var(--lime)]">meets an </span>
+                <span className="script text-white">argument</span>
+              </span>
+            </h1>
 
-            {/* Bottom-left: the demo card */}
-            <div className="absolute bottom-4 left-4 w-[min(19rem,72%)] animate-rise-in rounded-card bg-white/85 p-3 ring-1 ring-white/70 backdrop-blur-xl sm:bottom-6 sm:left-6">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink-900 text-white">
-                  <Play className="h-4 w-4 fill-current" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[13px] leading-snug font-semibold text-ink-900">
-                    Watch a real denial get overturned
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-ink-500">
-                    90 seconds · prior-auth denial, appeal filed
-                  </p>
-                </div>
-              </div>
-            </div>
+            <p className="mt-5 max-w-lg text-[13.5px] leading-relaxed text-white/85 sm:mt-6 sm:text-[15px]">
+              Insurers deny first and count on you giving up. Overturn reads your
+              denial letter, finds the policy language that contradicts it, and
+              drafts a citation-verified appeal — reviewed by you before a word
+              is sent.
+            </p>
 
-            {/* Top-right: overturn odds */}
-            <div
-              className="absolute top-5 right-4 w-[min(15rem,60%)] animate-float-soft rounded-card bg-white/85 p-4 ring-1 ring-white/70 backdrop-blur-xl sm:top-8 sm:right-8"
-              style={{ animationDelay: "0.4s" }}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <p className="text-[11px] font-medium tracking-wide text-ink-500 uppercase">
-                    Overturn odds
-                  </p>
-                  <p className="mt-1 font-sans text-2xl font-extrabold tracking-[-0.03em] text-ink-900">
-                    Strong
-                  </p>
-                </div>
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-leaf-100 text-leaf-700">
-                  <ShieldCheck className="h-4 w-4" />
+            <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-7">
+              <Link href="/cases/new" className="press pill pill-lime">
+                Appeal a denial
+              </Link>
+              <Link
+                href="/#how"
+                className="press inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2.5 font-mono text-[10px] tracking-[0.16em] text-white uppercase backdrop-blur-sm hover:border-white/70"
+              >
+                See how it works
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+            <div className="max-w-xs">
+              <p className="text-[clamp(1.75rem,3vw,2.25rem)] leading-none text-white">
+                <span className="script">Nine</span>
+                <span className="display ml-2 text-[0.82em] tracking-[-0.02em]">
+                  agents
                 </span>
-              </div>
-              <p className="mt-2 text-[11px] leading-snug text-ink-500">
-                Payer&apos;s own criteria met on 3 of 3 clinical points.
+              </p>
+              <p className="mt-2.5 text-[12.5px] leading-relaxed text-white/80">
+                Eight of them build the appeal. The auditor is not a model at
+                all — it re-opens each source document and blocks the draft if a
+                single quote cannot be found.
               </p>
             </div>
 
-            {/* Mid-right: deadline clock */}
-            <div
-              className="absolute right-4 bottom-6 hidden w-[min(17rem,64%)] animate-float-soft rounded-card bg-white/85 p-4 ring-1 ring-white/70 backdrop-blur-xl sm:block sm:right-8 sm:bottom-10"
-              style={{ animationDelay: "1.2s" }}
-            >
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-caution-100 text-caution-500">
-                  <CalendarClock className="h-4 w-4" />
+            <div className="flex items-center gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--lime)]">
+                <span className="flex gap-[2px]">
+                  {["#ffffff", "#fbe58f", "#aecbf5", "#a9dcb6"].map((c) => (
+                    <span
+                      key={c}
+                      className="block h-4 w-[3px] rounded-[1px] border border-black/15"
+                      style={{ background: c }}
+                    />
+                  ))}
                 </span>
-                <div>
-                  <p className="text-[13px] font-semibold text-ink-900">
-                    31 days to file
-                  </p>
-                  <p className="text-[11px] text-ink-500">
-                    Internal appeal · deadline tracked
-                  </p>
-                </div>
-              </div>
-              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-ink-100">
-                <div className="h-full w-[42%] rounded-full bg-leaf-500" />
+              </span>
+              <div className="flex flex-col gap-1">
+                <span className="font-mono text-[10px] tracking-[0.12em] text-white/85 uppercase">
+                  Nothing is ever sent
+                </span>
+                <span className="font-mono text-[10px] tracking-[0.12em] text-white/85 uppercase">
+                  You sign, not the agent
+                </span>
               </div>
             </div>
           </div>

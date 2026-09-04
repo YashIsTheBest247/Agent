@@ -1,55 +1,57 @@
 @import "tailwindcss";
 
-@theme {
-  /* ---- Brand: fresh leaf green ---- */
-  --color-leaf-50: #f3faea;
-  --color-leaf-100: #e4f5cd;
-  --color-leaf-200: #cdeca1;
-  --color-leaf-300: #b4e478;
-  --color-leaf-400: #9bd94e;
-  --color-leaf-500: #7cc93b;
-  --color-leaf-600: #5faa28;
-  --color-leaf-700: #47831f;
-  --color-leaf-800: #33601a;
-  --color-leaf-900: #1e3a0e;
-
-  /* ---- Ink: warm near-black through muted grey ---- */
-  --color-ink-900: #161914;
-  --color-ink-800: #22261f;
-  --color-ink-700: #33382f;
-  --color-ink-600: #4b5145;
-  --color-ink-500: #6b7265;
-  --color-ink-400: #949a8f;
-  --color-ink-300: #c2c7bd;
-  --color-ink-200: #e0e3dc;
-  --color-ink-100: #eff1ec;
-
-  /* ---- Surfaces ---- */
-  --color-canvas: #eceee8;
-  --color-surface: #ffffff;
-  --color-surface-muted: #f6f7f3;
-
-  /* ---- Semantic (case status) ---- */
-  --color-flag-500: #e0673a;
-  --color-flag-100: #fbe8df;
-  --color-caution-500: #d9a520;
-  --color-caution-100: #faf0d3;
-
-  /* ---- Type ---- */
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-
-  /* ---- Radii: the reference leans on very soft, large corners ---- */
-  --radius-card: 1.5rem;
-  --radius-card-lg: 2rem;
-  --radius-shell: 2.5rem;
-
-  /* ---- Motion ---- */
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
+/* --------------------------------------------------------------------------
+   Tokens live as plain custom properties and are used through arbitrary
+   values — text-[var(--text-2)] — so the palette is legible in the markup and
+   there is exactly one place to change it.
+   -------------------------------------------------------------------------- */
 :root {
   color-scheme: light;
+
+  /* Surfaces: warm paper rather than white, so photographs sit on it well. */
+  --paper: #f4f4ef;
+  --paper-2: #ebebe4;
+  --white: #ffffff;
+  --line: #dcdcd3;
+
+  /* Near-black, warmed slightly. Pure black reads cheap against paper. */
+  --ink: #0e100f;
+  --ink-2: #191c1a;
+  --ink-3: #2a2e2b;
+  --line-ink: #2e332f;
+
+  --text: #14171a;
+  --text-2: #55605c;
+  --text-3: #8a938f;
+
+  /* The single accent. Loud on purpose — it marks the things that act. */
+  --lime: #c8f24e;
+  --lime-deep: #a9d629;
+  --lime-wash: #eefabf;
+
+  /* Deep field behind the hero photograph. */
+  --deep: #07423a;
+  --deep-2: #062f2a;
+
+  /* Status. Used sparingly: a denial is already stressful enough. */
+  --risk-amber: #dd8b16;
+  --risk-amber-wash: #fdf4e3;
+  --risk-red: #d93a3a;
+  --risk-red-wash: #fdeded;
+  --ok-wash: #eff9f2;
+  --ok-deep: #3f5405;
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 26px;
+  --r-xl: 34px;
+}
+
+@theme inline {
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
 html {
@@ -57,49 +59,127 @@ html {
 }
 
 body {
-  background: var(--color-canvas);
-  color: var(--color-ink-800);
-  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Headline treatment used across the marketing surface: dark first clause,
-   green gradient second clause. */
-@utility text-gradient-leaf {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-leaf-600) 0%,
-    var(--color-leaf-400) 45%,
-    var(--color-leaf-300) 100%
-  );
-  background-clip: text;
-  color: transparent;
+/* --------------------------------------------------------------------------
+   Type. Headlines pair a heavy uppercase grotesk with an italic serif on the
+   word that carries the meaning — the one flourish the whole system gets.
+   -------------------------------------------------------------------------- */
+@utility display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+  line-height: 0.92;
 }
 
-/* Fine film grain — keeps the large flat green fields from banding. */
-@utility grain {
-  position: relative;
-}
-@utility grain-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+@utility script {
+  font-family: var(--font-script);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  font-size: 1.12em;
+  font-style: italic;
+  font-weight: 400;
 }
 
-@keyframes float-soft {
-  0%,
-  100% {
-    transform: translateY(0);
+@utility eyebrow {
+  font-family: var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Controls
+   -------------------------------------------------------------------------- */
+@utility pill {
+  display: inline-flex;
+  font-family: var(--font-display);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  font-size: 12px;
+  font-weight: 700;
+  transition:
+    transform 0.16s,
+    background-color 0.16s,
+    color 0.16s,
+    border-color 0.16s;
+}
+
+@utility pill-lime {
+  background: var(--lime);
+  color: var(--ink);
+  border: 1px solid var(--lime);
+  &:hover {
+    background: var(--lime-deep);
+    border-color: var(--lime-deep);
   }
-  50% {
-    transform: translateY(-10px);
+}
+
+@utility pill-ink {
+  background: var(--ink);
+  color: var(--white);
+  border: 1px solid var(--ink);
+  &:hover {
+    background: var(--ink-3);
   }
+}
+
+@utility pill-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  &:hover {
+    border-color: var(--text-3);
+  }
+}
+
+@utility press {
+  transition:
+    transform 0.13s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.16s,
+    border-color 0.16s,
+    color 0.16s,
+    box-shadow 0.2s;
+  &:active {
+    transform: scale(0.975);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Containers
+   -------------------------------------------------------------------------- */
+@utility card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+
+@utility card-lg {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+
+@utility rule {
+  border-top: 1px solid var(--line);
 }
 
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -114,21 +194,17 @@ body {
     transform: scale(1);
   }
   50% {
-    opacity: 0.45;
-    transform: scale(0.82);
+    opacity: 0.4;
+    transform: scale(0.8);
   }
 }
 
-@utility animate-float-soft {
-  animation: float-soft 7s var(--ease-out-soft) infinite;
-}
-
 @utility animate-rise-in {
-  animation: rise-in 0.7s var(--ease-out-soft) both;
+  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @utility animate-trace-pulse {
-  animation: trace-pulse 1.6s ease-in-out infinite;
+  animation: trace-pulse 1.5s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -143,6 +219,11 @@ body {
 }
 
 ::selection {
-  background: var(--color-leaf-200);
-  color: var(--color-ink-900);
+  background: var(--lime);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--lime-deep);
+  outline-offset: 2px;
 }

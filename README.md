@@ -45,7 +45,8 @@ citing text a reviewer cannot find is dismissed, and the deadline goes with it.
 ## Stack
 
 - Next.js 16 (App Router) · React 19 · TypeScript
-- Tailwind CSS v4 (CSS-first tokens in `src/app/globals.css`)
+- Tailwind CSS v4 — tokens and custom utilities in `src/app/globals.css`
+- Archivo + Instrument Serif for display, DM Sans for body, JetBrains Mono for labels
 - Gemini for the agent runtime, with Zod contracts on every output
 - Deployed on Vercel
 
@@ -79,7 +80,8 @@ src/
   components/
     site/              marketing sections
     case/              workspace UI — timeline, draft view, approval gate
-    ui/ art/           primitives and vector landscapes
+    ui/                button and pill primitives
+public/img/            photography, credited in CREDITS.md
   lib/
     agents/
       definitions/     the nine agents, one file per stage
@@ -90,6 +92,21 @@ src/
     domain/            schemas: documents, denial, taxonomy, appeal, case
     gemini/            client, tiers, Zod-to-Gemini schema conversion
 ```
+
+## Design system
+
+Warm paper (`--paper`), near-black ink, and a single loud accent (`--lime`) that
+marks only the things that act. Headlines pair a heavy uppercase grotesk with an
+italic serif on the word carrying the meaning — the `.display` and `.script`
+utilities. Small labels are mono, uppercase and wide-tracked — `.eyebrow`.
+
+Every colour, radius and font is a custom property on `:root`, used through
+arbitrary values (`text-[var(--text-2)]`), so the palette stays legible in the
+markup and there is exactly one file to change.
+
+Photography lives in `public/img/` and is credited in
+[`public/img/CREDITS.md`](public/img/CREDITS.md). Swapping an image is a matter
+of dropping a new file in at the same name.
 
 ## Deploying
 

@@ -27,10 +27,10 @@ function CitationChip({
       className={cn(
         "mx-0.5 inline-flex translate-y-[-1px] items-center rounded-full px-1.5 py-px align-middle text-[10.5px] font-semibold transition-colors",
         unresolved
-          ? "bg-flag-100 text-flag-500 ring-1 ring-flag-500/30"
+          ? "bg-[var(--risk-red-wash)] text-[var(--risk-red)] ring-1 ring-[var(--risk-red)]/30"
           : active
-            ? "bg-leaf-500 text-white"
-            : "bg-leaf-100 text-leaf-800 ring-1 ring-leaf-300/60 hover:bg-leaf-200",
+            ? "bg-[var(--lime)] text-white"
+            : "bg-[var(--lime-wash)] text-[var(--ok-deep)] ring-1 ring-[var(--lime-deep)] hover:bg-[var(--lime)]",
       )}
       title={citation?.quote ?? "This citation was never produced"}
     >
@@ -53,7 +53,7 @@ function renderInline(
       // Render **bold** without a markdown dependency.
       const bolded = part.split(/(\*\*[^*]+\*\*)/g).map((chunk, j) =>
         chunk.startsWith("**") && chunk.endsWith("**") ? (
-          <strong key={j} className="font-semibold text-ink-900">
+          <strong key={j} className="font-semibold text-[var(--ink)]">
             {chunk.slice(2, -2)}
           </strong>
         ) : (
@@ -100,7 +100,7 @@ function Body({
           return (
             <h3
               key={i}
-              className="mt-3 font-sans text-[15px] font-bold tracking-[-0.015em] text-ink-900"
+              className="mt-3 display text-[15px] font-bold tracking-[-0.015em] text-[var(--ink)]"
             >
               {renderInline(heading[1], citations, selected, onSelect)}
             </h3>
@@ -112,8 +112,8 @@ function Body({
           return (
             <ul key={i} className="flex flex-col gap-1.5 pl-1">
               {trimmed.split("\n").map((line, j) => (
-                <li key={j} className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink-700">
-                  <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-ink-300" />
+                <li key={j} className="flex gap-2.5 text-[13.5px] leading-relaxed text-[var(--text)]">
+                  <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[var(--text-3)]" />
                   <span>
                     {renderInline(
                       line.replace(/^\s*[-*]\s+/, ""),
@@ -129,7 +129,7 @@ function Body({
         }
 
         return (
-          <p key={i} className="text-[13.5px] leading-relaxed whitespace-pre-line text-ink-700">
+          <p key={i} className="text-[13.5px] leading-relaxed whitespace-pre-line text-[var(--text)]">
             {renderInline(trimmed, citations, selected, onSelect)}
           </p>
         );
@@ -139,10 +139,10 @@ function Body({
 }
 
 const statusCopy: Record<VerifiedCitation["status"], { label: string; tone: string }> = {
-  verified: { label: "Verified in source", tone: "text-leaf-700" },
-  near_match: { label: "Verified, minor wording drift", tone: "text-leaf-700" },
-  not_found: { label: "Not found in source", tone: "text-flag-500" },
-  missing_document: { label: "Document not uploaded", tone: "text-flag-500" },
+  verified: { label: "Verified in source", tone: "text-[var(--ok-deep)]" },
+  near_match: { label: "Verified, minor wording drift", tone: "text-[var(--ok-deep)]" },
+  not_found: { label: "Not found in source", tone: "text-[var(--risk-red)]" },
+  missing_document: { label: "Document not uploaded", tone: "text-[var(--risk-red)]" },
 };
 
 export function DraftView({
@@ -161,18 +161,18 @@ export function DraftView({
 
   return (
     <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-      <article className="rounded-card-lg bg-white p-6 ring-1 ring-ink-200/70 sm:p-8">
-        <p className="text-[11px] font-semibold tracking-[0.12em] text-ink-400 uppercase">
+      <article className="rounded-[var(--r-lg)] bg-white p-6 ring-1 ring-[var(--line)] sm:p-8">
+        <p className="text-[11px] font-semibold tracking-[0.12em] text-[var(--text-3)] uppercase">
           Draft appeal — not sent
         </p>
 
         {draft.recipientBlock ? (
-          <pre className="mt-5 font-body text-[12.5px] leading-relaxed whitespace-pre-wrap text-ink-500">
+          <pre className="mt-5 font-sans text-[12.5px] leading-relaxed whitespace-pre-wrap text-[var(--text-2)]">
             {draft.recipientBlock}
           </pre>
         ) : null}
 
-        <h2 className="mt-5 font-sans text-lg leading-snug font-bold tracking-[-0.02em] text-ink-900">
+        <h2 className="mt-5 display text-lg leading-snug font-bold tracking-[-0.02em] text-[var(--ink)]">
           {draft.subject}
         </h2>
 
@@ -186,11 +186,11 @@ export function DraftView({
         </div>
 
         {draft.enclosures.length > 0 ? (
-          <div className="mt-7 border-t border-ink-200/70 pt-5">
-            <p className="text-[12px] font-semibold text-ink-900">Enclosures</p>
+          <div className="mt-7 border-t border-[var(--line)] pt-5">
+            <p className="text-[12px] font-semibold text-[var(--ink)]">Enclosures</p>
             <ul className="mt-2 flex flex-col gap-1">
               {draft.enclosures.map((e) => (
-                <li key={e} className="text-[12.5px] text-ink-500">
+                <li key={e} className="text-[12.5px] text-[var(--text-2)]">
                   — {e}
                 </li>
               ))}
@@ -200,18 +200,18 @@ export function DraftView({
       </article>
 
       <aside className="flex flex-col gap-4">
-        <div className="rounded-card-lg bg-white p-5 ring-1 ring-ink-200/70">
+        <div className="rounded-[var(--r-lg)] bg-white p-5 ring-1 ring-[var(--line)]">
           <div className="flex items-center gap-2">
             {audit?.passed ? (
-              <CheckCircle2 className="h-4 w-4 text-leaf-600" />
+              <CheckCircle2 className="h-4 w-4 text-[var(--ok-deep)]" />
             ) : (
-              <FileWarning className="h-4 w-4 text-flag-500" />
+              <FileWarning className="h-4 w-4 text-[var(--risk-red)]" />
             )}
-            <h3 className="font-sans text-[14px] font-bold tracking-[-0.015em] text-ink-900">
+            <h3 className="display text-[14px] font-bold tracking-[-0.015em] text-[var(--ink)]">
               Citation audit
             </h3>
           </div>
-          <p className="mt-2 text-[12.5px] leading-relaxed text-ink-500">
+          <p className="mt-2 text-[12.5px] leading-relaxed text-[var(--text-2)]">
             {audit
               ? audit.passed
                 ? `Every one of the ${audit.checked.length} quotes in this letter was found in the document it cites.`
@@ -220,11 +220,11 @@ export function DraftView({
           </p>
         </div>
 
-        <div className="rounded-card-lg bg-white p-5 ring-1 ring-ink-200/70">
-          <h3 className="font-sans text-[14px] font-bold tracking-[-0.015em] text-ink-900">
+        <div className="rounded-[var(--r-lg)] bg-white p-5 ring-1 ring-[var(--line)]">
+          <h3 className="display text-[14px] font-bold tracking-[-0.015em] text-[var(--ink)]">
             Sources
           </h3>
-          <p className="mt-1 text-[12px] text-ink-400">
+          <p className="mt-1 text-[12px] text-[var(--text-3)]">
             Click a marker in the letter, or a row here.
           </p>
 
@@ -240,19 +240,19 @@ export function DraftView({
                     className={cn(
                       "w-full rounded-2xl p-3 text-left ring-1 transition-colors",
                       isOpen
-                        ? "bg-leaf-50 ring-leaf-300"
-                        : "bg-surface-muted ring-ink-200/60 hover:bg-ink-100",
+                        ? "bg-[var(--lime-wash)] ring-[var(--lime-deep)]"
+                        : "bg-[var(--paper)] ring-[var(--line)] hover:bg-[var(--paper-2)]",
                     )}
                   >
                     <span className="flex items-center gap-2">
-                      <span className="rounded-full bg-white px-1.5 py-px text-[10.5px] font-semibold text-ink-700 ring-1 ring-ink-200">
+                      <span className="rounded-full bg-white px-1.5 py-px text-[10.5px] font-semibold text-[var(--text)] ring-1 ring-[var(--line)]">
                         {c.id}
                       </span>
                       <span className={cn("text-[11px] font-medium", copy.tone)}>
                         {copy.label}
                       </span>
                     </span>
-                    <span className="mt-1.5 block text-[12px] leading-snug text-ink-600">
+                    <span className="mt-1.5 block text-[12px] leading-snug text-[var(--text-2)]">
                       {c.supports}
                     </span>
                   </button>
@@ -260,7 +260,7 @@ export function DraftView({
               );
             })}
             {citations.size === 0 ? (
-              <li className="text-[12.5px] text-ink-400">
+              <li className="text-[12.5px] text-[var(--text-3)]">
                 This letter rests on general standards rather than quoted documents.
               </li>
             ) : null}
@@ -268,10 +268,10 @@ export function DraftView({
         </div>
 
         {open ? (
-          <div className="rounded-card-lg bg-ink-900 p-5 text-white">
+          <div className="rounded-[var(--r-lg)] bg-[var(--ink)] p-5 text-white">
             <div className="flex items-center gap-2">
-              <QuoteIcon className="h-3.5 w-3.5 text-leaf-400" />
-              <p className="text-[11px] font-semibold tracking-[0.1em] text-ink-400 uppercase">
+              <QuoteIcon className="h-3.5 w-3.5 text-[var(--lime)]" />
+              <p className="text-[11px] font-semibold tracking-[0.1em] text-[var(--text-3)] uppercase">
                 {open.documentId}
                 {open.page ? ` · page ${open.page}` : ""}
               </p>
@@ -280,7 +280,7 @@ export function DraftView({
               “{open.quote}”
             </blockquote>
             {open.status === "near_match" && open.matchedText ? (
-              <p className="mt-3 border-t border-white/10 pt-3 text-[11.5px] leading-relaxed text-ink-400">
+              <p className="mt-3 border-t border-white/10 pt-3 text-[11.5px] leading-relaxed text-[var(--text-3)]">
                 Source reads: “{open.matchedText}”
               </p>
             ) : null}

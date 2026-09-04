@@ -1,27 +1,46 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import {
+  Archivo,
+  DM_Sans,
+  Instrument_Serif,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-jakarta",
+  variable: "--font-archivo",
   display: "swap",
 });
 
-const inter = Inter({
+const instrument = Instrument_Serif({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: "400",
+  style: ["italic", "normal"],
+  variable: "--font-instrument",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://overturn.vercel.app"),
   title: {
-    default: "Overturn — Get back what you're owed",
+    default: "Overturn — Where a denial meets an argument",
     template: "%s · Overturn",
   },
   description:
-    "Overturn is an AI appeals desk for denied insurance claims and incorrect medical bills. A supervised agent team reads your denial, finds the governing policy language, and drafts a citation-backed appeal you approve before anything is sent.",
+    "Overturn is an AI appeals desk for denied insurance claims and incorrect medical bills. Nine agents read your denial, find the policy language that contradicts it, and draft a citation-verified appeal you approve before anything is sent.",
   keywords: [
     "insurance claim appeal",
     "denied claim",
@@ -31,22 +50,25 @@ export const metadata: Metadata = {
     "AI agent",
   ],
   openGraph: {
-    title: "Overturn — Get back what you're owed",
+    title: "Overturn — Where a denial meets an argument",
     description:
-      "An AI appeals desk for denied claims. Citation-verified appeals, drafted in minutes, approved by you.",
+      "An AI appeals desk for denied claims. Citation-verified appeals, drafted by nine agents, approved by you.",
     type: "website",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#eceee8",
+  themeColor: "#0e100f",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${archivo.variable} ${instrument.variable} ${dmSans.variable} ${jetbrains.variable}`}
+    >
       <body className="min-h-dvh antialiased">{children}</body>
     </html>
   );

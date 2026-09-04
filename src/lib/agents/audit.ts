@@ -5,6 +5,7 @@ import type {
   VerifiedCitation,
 } from "@/lib/domain/appeal";
 import type { SourceDocument } from "@/lib/domain/documents";
+import { bestFuzzyMatch, normalise, type FuzzyHit } from "@/lib/match";
 
 /**
  * Citation verification is deliberately not an agent.
@@ -21,112 +22,6 @@ const NEAR_MATCH_THRESHOLD = 0.9;
 
 /** Below this length a "quote" matches by accident and proves nothing. */
 const MIN_QUOTE_CHARS = 12;
-
-/** Fuzzy comparison is capped so a pathological quote cannot stall a run. */
-const MAX_FUZZY_CHARS = 400;
-const MAX_CANDIDATE_WINDOWS = 48;
-
-/**
- * Collapses the differences that survive copying text out of a PDF: smart
- * quotes, ligatured dashes, soft hyphens, and reflowed whitespace. Anything
- * beyond that is a real difference and must count against the match.
- */
-export function normalise(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[‘’‚‛′]/g, "'")
-    .replace(/[“”„‟″]/g, '"')
-    .replace(/[‐-―−]/g, "-")
-    .replace(/­/g, "")
-    .replace(/ /g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-/** Levenshtein distance with a rolling pair of rows. */
-function editDistance(a: string, b: string): number {
-  if (a === b) return 0;
-  if (a.length === 0) return b.length;
-  if (b.length === 0) return a.length;
-
-  let previous = Array.from({ length: b.length + 1 }, (_, i) => i);
-  let current = new Array<number>(b.length + 1);
-
-  for (let i = 1; i <= a.length; i += 1) {
-    current[0] = i;
-    const aChar = a.charCodeAt(i - 1);
-    for (let j = 1; j <= b.length; j += 1) {
-      const cost = aChar === b.charCodeAt(j - 1) ? 0 : 1;
-      current[j] = Math.min(
-        current[j - 1] + 1,
-        previous[j] + 1,
-        previous[j - 1] + cost,
-      );
-    }
-    [previous, current] = [current, previous];
-  }
-
-  return previous[b.length];
-}
-
-function similarity(a: string, b: string): number {
-  const longest = Math.max(a.length, b.length);
-  if (longest === 0) return 1;
-  return 1 - editDistance(a, b) / longest;
-}
-
-/**
- * Picks the distinctive words in the quote to use as search anchors, so the
- * fuzzy pass compares a handful of plausible windows rather than every offset.
- */
-function anchorsFor(quote: string): string[] {
-  return [...new Set(quote.split(" "))]
-    .filter((token) => token.length >= 5)
-    .sort((a, b) => b.length - a.length)
-    .slice(0, 4);
-}
-
-type FuzzyHit = { score: number; text: string };
-
-function bestFuzzyMatch(quote: string, haystack: string): FuzzyHit | null {
-  const probe = quote.slice(0, MAX_FUZZY_CHARS);
-  const width = probe.length;
-  if (haystack.length === 0) return null;
-
-  const offsets = new Set<number>();
-  for (const anchor of anchorsFor(probe)) {
-    const anchorAt = probe.indexOf(anchor);
-    let from = 0;
-    while (offsets.size < MAX_CANDIDATE_WINDOWS) {
-      const found = haystack.indexOf(anchor, from);
-      if (found === -1) break;
-      offsets.add(Math.max(0, found - anchorAt));
-      from = found + anchor.length;
-    }
-  }
-
-  // No distinctive anchor landed: sweep coarsely rather than give up.
-  if (offsets.size === 0) {
-    const stride = Math.max(1, Math.floor(width / 2));
-    for (
-      let i = 0;
-      i <= haystack.length - 1 && offsets.size < MAX_CANDIDATE_WINDOWS;
-      i += stride
-    ) {
-      offsets.add(i);
-    }
-  }
-
-  let best: FuzzyHit | null = null;
-  for (const offset of offsets) {
-    const window = haystack.slice(offset, offset + width);
-    if (window.length === 0) continue;
-    const score = similarity(probe, window);
-    if (!best || score > best.score) best = { score, text: window };
-  }
-
-  return best;
-}
 
 export type VerifyOptions = {
   nearMatchThreshold?: number;

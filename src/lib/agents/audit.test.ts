@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { auditCitations, normalise, verifyCitation } from "./audit";
+import { auditCitations, verifyCitation } from "./audit";
+import { normalise } from "@/lib/match";
 import type { Citation } from "@/lib/domain/appeal";
 import type { SourceDocument } from "@/lib/domain/documents";
 

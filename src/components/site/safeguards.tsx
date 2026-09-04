@@ -1,66 +1,74 @@
-import { Eye, FileLock2, HandHeart, Quote } from "lucide-react";
+import Image from "next/image";
 
 const safeguards = [
   {
-    icon: Quote,
     title: "No unverifiable claims",
-    body: "Quotes are re-checked against the source document before you ever see them. Unresolvable citations block the draft instead of shipping inside it.",
+    body: "Quotes are re-checked against the source before you see them. A citation that cannot be resolved blocks the draft instead of shipping inside it.",
   },
   {
-    icon: HandHeart,
     title: "You sign, not the agent",
-    body: "Overturn drafts, tracks and prepares. Filing is an action you take deliberately, on a document you have read.",
+    body: "Overturn drafts, verifies and prepares. Filing is an action you take deliberately, on a document you have read.",
   },
   {
-    icon: Eye,
     title: "Every decision is inspectable",
-    body: "Each case keeps a full trace: which agent ran, what it read, what it concluded, and where it disagreed with another agent.",
+    body: "Each case keeps a full trace: which agent ran, what it read, what it concluded, and where it disagreed with another.",
   },
   {
-    icon: FileLock2,
-    title: "Your documents stay yours",
-    body: "Uploads are scoped to your case, never used to train models, and deletable in one action along with everything derived from them.",
+    title: "Your documents, and a way to remove them",
+    body: "Uploads go to the Gemini API to be read and are held only for the life of the case. Deleting a case removes the documents and everything derived from them.",
   },
 ];
 
 export function Safeguards() {
   return (
-    <section id="safeguards" className="px-3 pb-16 sm:px-5 sm:pb-24">
-      <div className="mx-auto max-w-6xl rounded-shell bg-white p-7 ring-1 ring-ink-200/70 sm:p-12">
-        <div className="max-w-2xl">
-          <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] leading-[1.05] font-extrabold tracking-[-0.035em] text-ink-900">
-            The boring part that makes it trustworthy
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-ink-500">
-            A confident letter full of invented citations is worse than no
-            letter — it gets your appeal dismissed and costs you the deadline.
-            So most of the engineering here went into refusing to produce one.
-          </p>
-        </div>
+    <section
+      id="safeguards"
+      className="border-y border-[var(--line-ink)] bg-[var(--ink)]"
+    >
+      <div className="mx-auto max-w-[1240px] px-5 py-20 sm:py-28">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1fr]">
+          <div>
+            <div className="eyebrow text-[var(--text-3)]">Safeguards</div>
+            <h2 className="mt-3 text-[clamp(1.9rem,4.5vw,3rem)]">
+              <span className="display text-[var(--lime)]">The boring part that makes it </span>
+              <span className="script text-white">trustworthy</span>
+            </h2>
+            <p className="mt-5 max-w-md text-[13.5px] leading-relaxed text-white/70">
+              A confident letter full of invented citations is worse than no
+              letter — it gets the appeal dismissed and costs you the deadline.
+              Most of the engineering here went into refusing to produce one.
+            </p>
 
-        <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
-          {safeguards.map((s) => (
-            <div key={s.title} className="flex gap-4">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-leaf-100 text-leaf-700">
-                <s.icon className="h-[18px] w-[18px]" />
-              </span>
-              <div>
-                <h3 className="font-sans text-[15px] font-bold tracking-[-0.015em] text-ink-900">
+            <div className="mt-8 overflow-hidden rounded-[var(--r-md)]">
+              <Image
+                src="/img/hospital.jpg"
+                alt="The entrance canopy of a hospital building"
+                width={900}
+                height={600}
+                className="h-52 w-full object-cover"
+              />
+            </div>
+          </div>
+
+          <ul className="border-t border-[var(--line-ink)]">
+            {safeguards.map((s) => (
+              <li key={s.title} className="border-b border-[var(--line-ink)] py-6">
+                <h3 className="display text-[16px] tracking-[-0.015em] text-white">
                   {s.title}
                 </h3>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-ink-500">
+                <p className="mt-2 text-[13px] leading-relaxed text-white/65">
                   {s.body}
                 </p>
-              </div>
-            </div>
-          ))}
+              </li>
+            ))}
+            <li className="pt-6">
+              <p className="font-mono text-[10px] leading-relaxed tracking-[0.1em] text-[var(--text-3)] uppercase">
+                Overturn is not a law firm, an insurer, or a medical provider.
+                Nothing it produces is legal or medical advice.
+              </p>
+            </li>
+          </ul>
         </div>
-
-        <p className="mt-10 border-t border-ink-200/70 pt-6 text-[12px] leading-relaxed text-ink-400">
-          Overturn is not a law firm, an insurance broker, or a medical
-          provider, and nothing it produces is legal or medical advice. It
-          prepares documents for you to review, edit and file yourself.
-        </p>
       </div>
     </section>
   );

@@ -1,25 +1,29 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type PillTone = "leaf" | "ink" | "glass" | "flag" | "caution" | "neutral";
+type Tone = "lime" | "ink" | "neutral" | "amber" | "red" | "ok";
 
-const tones: Record<PillTone, string> = {
-  leaf: "bg-leaf-100 text-leaf-800 ring-1 ring-leaf-300/60",
-  ink: "bg-ink-900 text-white",
-  glass:
-    "bg-white/75 text-ink-700 ring-1 ring-white/60 backdrop-blur-md shadow-[0_2px_10px_rgba(22,25,20,0.06)]",
-  flag: "bg-flag-100 text-flag-500 ring-1 ring-flag-500/25",
-  caution: "bg-caution-100 text-caution-500 ring-1 ring-caution-500/25",
-  neutral: "bg-ink-100 text-ink-600 ring-1 ring-ink-200",
+/**
+ * The small status chip used across the workspace. Mono, uppercase, hairline
+ * border — it labels state without competing with the content it sits beside.
+ */
+const tones: Record<Tone, string> = {
+  lime: "border-[var(--lime-deep)] bg-[var(--lime-wash)] text-[var(--ok-deep)]",
+  ink: "border-[var(--ink)] bg-[var(--ink)] text-white",
+  neutral: "border-[var(--line)] bg-[var(--paper)] text-[var(--text-2)]",
+  amber:
+    "border-[var(--risk-amber)]/40 bg-[var(--risk-amber-wash)] text-[#9a5f08]",
+  red: "border-[var(--risk-red)]/35 bg-[var(--risk-red-wash)] text-[#8f1f1f]",
+  ok: "border-[#bfe3cc] bg-[var(--ok-wash)] text-[#3d5406]",
 };
 
 export function Pill({
-  tone = "glass",
+  tone = "neutral",
   icon,
   children,
   className,
 }: {
-  tone?: PillTone;
+  tone?: Tone;
   icon?: ReactNode;
   children: ReactNode;
   className?: string;
@@ -27,7 +31,7 @@ export function Pill({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium tracking-[-0.005em]",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[9.5px] tracking-[0.12em] uppercase",
         tones[tone],
         className,
       )}

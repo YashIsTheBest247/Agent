@@ -2,94 +2,145 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
 import { Logo } from "@/components/site/logo";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { label: "How it works", href: "/#how-it-works" },
-  { label: "Use cases", href: "/#use-cases" },
-  { label: "Pricing", href: "/#pricing" },
+  { label: "The crew", href: "/#crew" },
+  { label: "How it works", href: "/#how" },
+  { label: "What you get", href: "/#results" },
   { label: "Safeguards", href: "/#safeguards" },
 ] as const;
 
+/**
+ * Transparent while it sits over the hero photograph, solid once the page
+ * scrolls past it — so the lime wordmark reads on the image and the ink
+ * wordmark reads on paper.
+ */
 export function Nav() {
+  const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setSolid(window.scrollY > 80);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
-      <nav
-        className={cn(
-          "mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 py-2.5 transition-all duration-300 ease-[var(--ease-out-soft)] sm:px-5",
-          scrolled
-            ? "bg-white/85 shadow-[0_8px_30px_-12px_rgba(22,25,20,0.18)] ring-1 ring-ink-200/70 backdrop-blur-xl"
-            : "bg-transparent",
-        )}
-      >
-        <Link href="/" className="shrink-0" aria-label="Overturn home">
-          <Logo />
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300",
+        solid
+          ? "border-[var(--line)] bg-[var(--paper)]/92 backdrop-blur-md"
+          : "border-transparent bg-transparent",
+      )}
+    >
+      <nav className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+        <Link href="/" className="press shrink-0" aria-label="Overturn home">
+          <Logo tone={solid ? "ink" : "light"} />
         </Link>
 
-        <ul className="hidden items-center gap-1 rounded-full bg-white/70 p-1 ring-1 ring-ink-200/60 backdrop-blur-md lg:flex">
+        <div className="hidden items-center gap-7 md:flex">
           {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className={cn(
+                "press text-[13.5px] transition-colors",
+                solid
+                  ? "text-[var(--text-2)] hover:text-[var(--ink)]"
+                  : "text-white/80 hover:text-white",
+              )}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link
+            href="/cases"
+            className={cn(
+              "press hidden text-[13.5px] transition-colors sm:inline-flex",
+              solid
+                ? "text-[var(--text-2)] hover:text-[var(--ink)]"
+                : "text-white/80 hover:text-white",
+            )}
+          >
+            My cases
+          </Link>
+          <Link
+            href="/cases/new"
+            className={cn(
+              "press pill hidden sm:inline-flex",
+              solid
+                ? "pill-lime"
+                : "border border-white/35 bg-white/12 text-white backdrop-blur-sm hover:bg-white/20",
+            )}
+          >
+            Appeal a denial
+          </Link>
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls="nav-sheet"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+            className={cn(
+              "press flex h-10 w-10 items-center justify-center rounded-full border md:hidden",
+              solid
+                ? "border-[var(--line)] text-[var(--ink)]"
+                : "border-white/30 text-white",
+            )}
+          >
+            <span className="relative block h-3.5 w-4.5" aria-hidden="true">
+              <span
+                className="absolute left-0 block h-[1.5px] w-full bg-current transition-transform duration-200"
+                style={{
+                  top: 2,
+                  transform: open ? "translateY(5px) rotate(45deg)" : "none",
+                }}
+              />
+              <span
+                className="absolute left-0 block h-[1.5px] w-full bg-current transition-transform duration-200"
+                style={{
+                  bottom: 2,
+                  transform: open ? "translateY(-5px) rotate(-45deg)" : "none",
+                }}
+              />
+            </span>
+          </button>
+        </div>
+      </nav>
+
+      <div
+        id="nav-sheet"
+        hidden={!open}
+        className="border-t border-[var(--line-ink)] bg-[var(--ink)] px-5 pt-2 pb-5 md:hidden"
+      >
+        <ul className="flex flex-col">
+          {[...links, { label: "My cases", href: "/cases" }].map((l) => (
             <li key={l.href}>
               <Link
                 href={l.href}
-                className="inline-flex rounded-full px-4 py-1.5 text-[13px] font-medium text-ink-600 transition-colors hover:bg-ink-100 hover:text-ink-900"
+                onClick={() => setOpen(false)}
+                className="block border-b border-[var(--line-ink)] py-3.5 text-[15px] text-white/85"
               >
                 {l.label}
               </Link>
             </li>
           ))}
         </ul>
-
-        <div className="flex items-center gap-2">
-          <ButtonLink
-            href="/cases"
-            variant="outline"
-            size="sm"
-            className="hidden sm:inline-flex"
-          >
-            Sign in
-          </ButtonLink>
-          <ButtonLink href="/cases/new" variant="ink" size="sm">
-            Start a case
-          </ButtonLink>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-700 ring-1 ring-ink-200 transition-colors hover:bg-ink-100 lg:hidden"
-          >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
-        </div>
-      </nav>
-
-      {open ? (
-        <div className="mx-auto mt-2 max-w-6xl rounded-card bg-white p-2 shadow-[0_18px_50px_-20px_rgba(22,25,20,0.28)] ring-1 ring-ink-200 lg:hidden">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="block rounded-2xl px-4 py-3 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-100"
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-      ) : null}
+        <Link
+          href="/cases/new"
+          onClick={() => setOpen(false)}
+          className="pill pill-lime mt-4 w-full justify-center"
+        >
+          Appeal a denial
+        </Link>
+      </div>
     </header>
   );
 }

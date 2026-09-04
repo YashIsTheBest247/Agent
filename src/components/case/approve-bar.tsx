@@ -46,14 +46,14 @@ export function ApproveBar({
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-card-lg bg-ink-900 p-5 text-white sm:flex-row sm:items-center sm:justify-between sm:p-6">
+    <div className="flex flex-col gap-4 rounded-[var(--r-lg)] bg-[var(--ink)] p-5 text-white sm:flex-row sm:items-center sm:justify-between sm:p-6">
       <div className="flex gap-3">
-        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-leaf-400" />
+        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--lime)]" />
         <div>
-          <p className="font-sans text-[15px] font-bold tracking-[-0.015em]">
+          <p className="display text-[15px] font-bold tracking-[-0.015em]">
             {approvedAt ? "You approved this draft" : "Nothing has been sent"}
           </p>
-          <p className="mt-1 max-w-md text-[12.5px] leading-relaxed text-ink-400">
+          <p className="mt-1 max-w-md text-[12.5px] leading-relaxed text-[var(--text-3)]">
             {approvedAt
               ? "Copy the letter, attach the checklist items, and file it by the route below."
               : "Read the letter and check the quotes. Approving records that you have reviewed it — Overturn never contacts your insurer."}
@@ -62,12 +62,12 @@ export function ApproveBar({
       </div>
 
       <div className="flex shrink-0 gap-2">
-        <Button variant="outline" size="md" onClick={copy} className="border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/15">
+        <Button variant="ghost" size="md" onClick={copy} className="border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/15">
           {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
           {copied ? "Copied" : "Copy letter"}
         </Button>
         {!approvedAt ? (
-          <Button variant="leaf" size="md" onClick={approve} disabled={pending}>
+          <Button variant="lime" size="md" onClick={approve} disabled={pending}>
             {pending ? "Recording…" : "I've reviewed this"}
           </Button>
         ) : null}

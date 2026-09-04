@@ -1,40 +1,46 @@
-import { ArrowUpRight } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
-import { Grain, Scene } from "@/components/art/scene";
+import Image from "next/image";
+import Link from "next/link";
 
 export function Cta() {
   return (
-    <section className="px-3 pb-16 sm:px-5 sm:pb-24">
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-shell ring-1 ring-leaf-900/10">
+    // Paper above the panel, so the dark safeguards section ends before this
+    // one begins rather than the two reading as a single black mass.
+    <section className="px-3 pt-20 pb-3 sm:px-5 sm:pt-28 sm:pb-5">
+      <div className="relative overflow-hidden rounded-[var(--r-xl)] bg-[var(--deep)]">
         <div className="absolute inset-0">
-          <Scene variant="dawn" seed={30} />
-          <Grain />
-          <div className="absolute inset-0 bg-gradient-to-br from-leaf-900/70 via-leaf-900/35 to-transparent" />
+          <Image
+            src="/img/paperwork.jpg"
+            alt="Insurance forms and a calculator spread across a desk"
+            fill
+            sizes="100vw"
+            className="object-cover object-[center_60%]"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(160deg, rgba(6,47,42,0.92) 0%, rgba(7,66,58,0.78) 55%, rgba(4,26,23,0.92) 100%)",
+            }}
+          />
         </div>
 
-        <div className="relative flex flex-col items-start gap-7 p-8 sm:p-14 lg:flex-row lg:items-end lg:justify-between">
+        <div className="relative flex flex-col gap-8 px-6 py-16 sm:px-14 sm:py-20 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
-            <h2 className="font-sans text-[clamp(1.875rem,4.5vw,3rem)] leading-[1.02] font-extrabold tracking-[-0.035em] text-white">
-              You have a deadline.
-              <br />
-              It is shorter than you think.
+            <div className="eyebrow text-white/50">The clock</div>
+            <h2 className="mt-3 text-[clamp(1.9rem,4.6vw,3.2rem)] leading-[1.02]">
+              <span className="display text-[var(--lime)]">Your deadline is shorter than you </span>
+              <span className="script text-white">think</span>
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-white/80">
+            <p className="mt-5 text-[14px] leading-relaxed text-white/80">
               Most internal appeal windows close within 180 days of the denial —
-              some in 60. Upload the letter and find out where you stand in
-              about six minutes.
+              some in 60. Upload the letter and find out where you stand before
+              yours closes.
             </p>
           </div>
 
-          <ButtonLink
-            href="/cases/new"
-            variant="leaf"
-            size="lg"
-            className="shrink-0"
-          >
-            Start a case — free
-            <ArrowUpRight className="h-4 w-4" />
-          </ButtonLink>
+          <Link href="/cases/new" className="press pill pill-lime shrink-0">
+            Appeal a denial
+          </Link>
         </div>
       </div>
     </section>

@@ -101,22 +101,22 @@ export function NewCaseFlow({ configured }: { configured: boolean }) {
 
   if (phase !== "collecting") {
     return (
-      <div className="rounded-card-lg bg-white p-6 ring-1 ring-ink-200/70 sm:p-8">
+      <div className="rounded-[var(--r-lg)] bg-white p-6 ring-1 ring-[var(--line)] sm:p-8">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 animate-trace-pulse rounded-full bg-leaf-500" />
-          <h2 className="font-sans text-lg font-bold tracking-[-0.02em] text-ink-900">
+          <span className="h-2 w-2 animate-trace-pulse rounded-full bg-[var(--lime)]" />
+          <h2 className="display text-lg font-bold tracking-[-0.02em] text-[var(--ink)]">
             {phase === "running" ? "The agents are working" : "Run complete"}
           </h2>
         </div>
-        <p className="mt-2 text-[13px] leading-relaxed text-ink-500">
-          Nine specialists, in sequence. You can watch each one as it goes — and
-          read afterwards exactly why it concluded what it did.
+        <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-2)]">
+          Nine specialists, each with one job. You can watch each one as it goes
+          — and read afterwards exactly why it concluded what it did.
         </p>
 
         {error ? (
-          <div className="mt-5 flex gap-3 rounded-card bg-flag-100 p-4 ring-1 ring-flag-500/25">
-            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-flag-500" />
-            <p className="text-[13px] leading-relaxed text-ink-700">{error}</p>
+          <div className="mt-5 flex gap-3 rounded-[var(--r-md)] bg-[var(--risk-red-wash)] p-4 ring-1 ring-[var(--risk-red)]/25">
+            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--risk-red)]" />
+            <p className="text-[13px] leading-relaxed text-[var(--text)]">{error}</p>
           </div>
         ) : null}
 
@@ -130,13 +130,13 @@ export function NewCaseFlow({ configured }: { configured: boolean }) {
   return (
     <div className="flex flex-col gap-5">
       {!configured ? (
-        <div className="flex gap-3 rounded-card bg-caution-100 p-5 ring-1 ring-caution-500/25">
-          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-caution-500" />
+        <div className="flex gap-3 rounded-[var(--r-md)] bg-[var(--risk-amber-wash)] p-5 ring-1 ring-[var(--risk-amber)]/25">
+          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--risk-amber)]" />
           <div>
-            <p className="text-[13px] font-semibold text-ink-900">
+            <p className="text-[13px] font-semibold text-[var(--ink)]">
               No Gemini key on the server
             </p>
-            <p className="mt-1 text-[12.5px] leading-relaxed text-ink-600">
+            <p className="mt-1 text-[12.5px] leading-relaxed text-[var(--text-2)]">
               Add <code className="rounded bg-white px-1 py-0.5">GEMINI_API_KEY</code>{" "}
               to <code className="rounded bg-white px-1 py-0.5">.env.local</code> and
               restart the dev server. Uploads will be rejected until then.
@@ -157,19 +157,19 @@ export function NewCaseFlow({ configured }: { configured: boolean }) {
           addFiles(e.dataTransfer.files);
         }}
         className={cn(
-          "rounded-card-lg border border-dashed p-8 text-center transition-colors sm:p-12",
+          "rounded-[var(--r-lg)] border border-dashed p-8 text-center transition-colors sm:p-12",
           dragging
-            ? "border-leaf-500 bg-leaf-50"
-            : "border-ink-300 bg-white hover:border-ink-400",
+            ? "border-[var(--lime-deep)] bg-[var(--lime-wash)]"
+            : "border-[var(--text-3)] bg-white hover:border-[var(--text-2)]",
         )}
       >
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-leaf-100 text-leaf-700">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--lime-wash)] text-[var(--ok-deep)]">
           <Upload className="h-5 w-5" />
         </span>
-        <h2 className="mt-4 font-sans text-lg font-bold tracking-[-0.02em] text-ink-900">
+        <h2 className="mt-4 display text-lg font-bold tracking-[-0.02em] text-[var(--ink)]">
           Drop the denial letter here
         </h2>
-        <p className="mx-auto mt-2 max-w-sm text-[13px] leading-relaxed text-ink-500">
+        <p className="mx-auto mt-2 max-w-sm text-[13px] leading-relaxed text-[var(--text-2)]">
           A phone photo is fine. Add your plan documents and any clinical records
           too — the more the agents can quote, the stronger the appeal.
         </p>
@@ -186,7 +186,7 @@ export function NewCaseFlow({ configured }: { configured: boolean }) {
           }}
         />
         <Button
-          variant="outline"
+          variant="ghost"
           size="md"
           className="mt-5"
           onClick={() => inputRef.current?.click()}
@@ -200,16 +200,16 @@ export function NewCaseFlow({ configured }: { configured: boolean }) {
           {files.map((file) => (
             <li
               key={`${file.name}-${file.size}`}
-              className="flex items-center gap-3 rounded-card bg-white p-4 ring-1 ring-ink-200/70"
+              className="flex items-center gap-3 rounded-[var(--r-md)] bg-white p-4 ring-1 ring-[var(--line)]"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-muted text-ink-500 ring-1 ring-ink-200/70">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--paper)] text-[var(--text-2)] ring-1 ring-[var(--line)]">
                 <FileText className="h-4 w-4" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] font-medium text-ink-900">
+                <p className="truncate text-[13px] font-medium text-[var(--ink)]">
                   {file.name}
                 </p>
-                <p className="text-[11.5px] text-ink-400">
+                <p className="text-[11.5px] text-[var(--text-3)]">
                   {(file.size / 1024).toFixed(0)} KB
                 </p>
               </div>
@@ -219,7 +219,7 @@ export function NewCaseFlow({ configured }: { configured: boolean }) {
                 onClick={() =>
                   setFiles((current) => current.filter((f) => f !== file))
                 }
-                className="flex h-8 w-8 items-center justify-center rounded-full text-ink-400 transition-colors hover:bg-ink-100 hover:text-flag-500"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--text-3)] transition-colors hover:bg-[var(--paper-2)] hover:text-[var(--risk-red)]"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -229,9 +229,9 @@ export function NewCaseFlow({ configured }: { configured: boolean }) {
       ) : null}
 
       {error ? (
-        <div className="flex gap-3 rounded-card bg-flag-100 p-4 ring-1 ring-flag-500/25">
-          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-flag-500" />
-          <p className="text-[13px] leading-relaxed text-ink-700">{error}</p>
+        <div className="flex gap-3 rounded-[var(--r-md)] bg-[var(--risk-red-wash)] p-4 ring-1 ring-[var(--risk-red)]/25">
+          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--risk-red)]" />
+          <p className="text-[13px] leading-relaxed text-[var(--text)]">{error}</p>
         </div>
       ) : null}
 

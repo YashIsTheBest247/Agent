@@ -6,18 +6,38 @@ import { Check, Copy, ShieldCheck, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
- * The contractor's gate. Approving records that they have read the quote and
- * checked the maths — it sends nothing to their customer, and nothing in this
- * codebase does.
+ * The human gate, shared by all three desks.
+ *
+ * Approving records that a person has read the document and accepted it. It
+ * transmits nothing — no letter to a payer, no quote to a customer, no
+ * confirmation to a buyer. Nothing in this codebase sends anything outward,
+ * and this control is where that promise is kept.
  */
-export function QuoteApproveBar({
-  quoteId,
-  documentText,
+export function ApprovalBar({
+  recordId,
+  basePath,
+  listPath,
+  copyText,
   approvedAt,
+  headline,
+  blurb,
+  approvedHeadline,
+  approvedBlurb,
+  approveLabel = "I've checked it",
+  copyLabel = "Copy",
 }: {
-  quoteId: string;
-  documentText: string;
+  recordId: string;
+  /** API base, e.g. "/api/orders". Approve posts to `${basePath}/${id}/approve`. */
+  basePath: string;
+  listPath: string;
+  copyText: string;
   approvedAt: string | null;
+  headline: string;
+  blurb: string;
+  approvedHeadline: string;
+  approvedBlurb: string;
+  approveLabel?: string;
+  copyLabel?: string;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -26,18 +46,18 @@ export function QuoteApproveBar({
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(documentText);
+      await navigator.clipboard.writeText(copyText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      /* clipboard unavailable; the quote is on screen to select */
+      /* clipboard unavailable; the text is on screen to select */
     }
   };
 
   const approve = async () => {
     setPending(true);
     try {
-      await fetch(`/api/quotes/${quoteId}/approve`, { method: "POST" });
+      await fetch(`${basePath}/${recordId}/approve`, { method: "POST" });
       router.refresh();
     } finally {
       setPending(false);
@@ -47,8 +67,8 @@ export function QuoteApproveBar({
   const remove = async () => {
     setPending(true);
     try {
-      await fetch(`/api/quotes/${quoteId}`, { method: "DELETE" });
-      router.push("/quotes");
+      await fetch(`${basePath}/${recordId}`, { method: "DELETE" });
+      router.push(listPath);
       router.refresh();
     } finally {
       setPending(false);
@@ -61,12 +81,10 @@ export function QuoteApproveBar({
         <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--lime)]" />
         <div>
           <p className="display text-[15px] tracking-[-0.015em]">
-            {approvedAt ? "You approved this quote" : "Nothing has been sent"}
+            {approvedAt ? approvedHeadline : headline}
           </p>
           <p className="mt-1 max-w-md text-[12.5px] leading-relaxed text-[var(--text-3)]">
-            {approvedAt
-              ? "Copy it into your own template, or send it as it stands."
-              : "Check the lines against your book and the exclusions against the job. Approving records that you have read it — the desk never contacts your customer."}
+            {approvedAt ? approvedBlurb : blurb}
           </p>
         </div>
       </div>
@@ -94,7 +112,7 @@ export function QuoteApproveBar({
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            aria-label="Delete this quote"
+            aria-label="Delete this record"
             className="press flex h-9 w-9 items-center justify-center rounded-full text-[var(--text-3)] transition-colors hover:bg-white/10 hover:text-white"
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -108,12 +126,12 @@ export function QuoteApproveBar({
           className="border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/15"
         >
           {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-          {copied ? "Copied" : "Copy quote"}
+          {copied ? "Copied" : copyLabel}
         </Button>
 
         {!approvedAt ? (
           <Button variant="lime" size="md" onClick={approve} disabled={pending}>
-            {pending ? "Recording…" : "I've checked it"}
+            {pending ? "Recording…" : approveLabel}
           </Button>
         ) : null}
       </div>

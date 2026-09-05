@@ -9,3 +9,6 @@ build
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+
+# Local record storage (JSON files written by the desks)
+.data

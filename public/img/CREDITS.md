@@ -15,3 +15,6 @@ commercial use without permission or attribution. Attribution is given anyway.
 
 Each is reachable at `https://images.unsplash.com/<id>`. Replace any of them by
 dropping a new file in at the same name — nothing else references the paths.
+| warehouse.jpg     | photo-1586528116311-ad8dd3c8310d   |
+| warehouse-aisle.jpg | photo-1553413077-190dd305871c    |
+| site.jpg          | photo-1504307651254-35680f356dfd   |

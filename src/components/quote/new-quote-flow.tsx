@@ -126,7 +126,7 @@ export function NewQuoteFlow({ configured }: { configured: boolean }) {
           </h2>
         </div>
         <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-2)]">
-          Eight specialists. None of them is allowed to name a price — the
+          Seven specialists. None of them is allowed to name a price — the
           figures come from your price book at the end.
         </p>
 

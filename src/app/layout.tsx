@@ -34,25 +34,25 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://overturn.vercel.app"),
+  metadataBase: new URL("https://second-chair.vercel.app"),
   title: {
-    default: "Overturn — Where a denial meets an argument",
-    template: "%s · Overturn",
+    default: "Second Chair — We do the preparation, you do the signing",
+    template: "%s · Second Chair",
   },
   description:
-    "Overturn is an AI appeals desk for denied insurance claims and incorrect medical bills. Nine agents read your denial, find the policy language that contradicts it, and draft a citation-verified appeal you approve before anything is sent.",
+    "Second Chair is three desks of AI agents for work that ends in a document someone has to sign: insurance appeals, field quoting, and purchase orders. Agents propose; code verifies every fact against the source; you sign.",
   keywords: [
+    "AI agents",
     "insurance claim appeal",
-    "denied claim",
-    "medical billing errors",
-    "prior authorization denial",
-    "external review",
-    "AI agent",
+    "construction quoting",
+    "purchase order automation",
+    "multi-agent system",
+    "back office automation",
   ],
   openGraph: {
-    title: "Overturn — Where a denial meets an argument",
+    title: "Second Chair — We do the preparation, you do the signing",
     description:
-      "An AI appeals desk for denied claims. Citation-verified appeals, drafted by nine agents, approved by you.",
+      "Three desks of agents for appeals, quoting and orders. Every fact checked by code, every document signed by you.",
     type: "website",
   },
 };

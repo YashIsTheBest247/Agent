@@ -3,19 +3,19 @@ import Image from "next/image";
 const safeguards = [
   {
     title: "No unverifiable claims",
-    body: "Quotes are re-checked against the source before you see them. A citation that cannot be resolved blocks the draft instead of shipping inside it.",
+    body: "Every quotation, price and product is checked against the thing it came from before you see it. What cannot be resolved blocks the work instead of travelling inside it.",
   },
   {
     title: "You sign, not the agent",
-    body: "Overturn drafts, verifies and prepares. Filing is an action you take deliberately, on a document you have read.",
+    body: "The desks draft, verify and prepare. Sending is an action you take deliberately, on a document you have read, in the system that owns it.",
   },
   {
     title: "Every decision is inspectable",
-    body: "Each case keeps a full trace: which agent ran, what it read, what it concluded, and where it disagreed with another.",
+    body: "Each run keeps a full trace: which agent ran, what it read, what it concluded, and where the code disagreed with it.",
   },
   {
     title: "Your documents, and a way to remove them",
-    body: "Uploads go to the Gemini API to be read and are held only for the life of the case. Deleting a case removes the documents and everything derived from them.",
+    body: "Uploads go to the Gemini API to be read and are held only for the life of the record. Deleting one removes the documents and everything derived from them.",
   },
 ];
 
@@ -34,9 +34,10 @@ export function Safeguards() {
               <span className="script text-white">trustworthy</span>
             </h2>
             <p className="mt-5 max-w-md text-[13.5px] leading-relaxed text-white/70">
-              A confident letter full of invented citations is worse than no
-              letter — it gets the appeal dismissed and costs you the deadline.
-              Most of the engineering here went into refusing to produce one.
+              A confident document full of invented detail is worse than no
+              document — it gets the appeal dismissed, the quote disputed, the
+              delivery returned. Most of the engineering here went into
+              refusing to produce one.
             </p>
 
             <div className="mt-8 overflow-hidden rounded-[var(--r-md)]">
@@ -63,8 +64,9 @@ export function Safeguards() {
             ))}
             <li className="pt-6">
               <p className="font-mono text-[10px] leading-relaxed tracking-[0.1em] text-[var(--text-3)] uppercase">
-                Overturn is not a law firm, an insurer, or a medical provider.
-                Nothing it produces is legal or medical advice.
+                Second Chair is not a law firm, an insurer, a medical provider or a
+                surveyor. Nothing it produces is legal, medical or
+                professional advice.
               </p>
             </li>
           </ul>

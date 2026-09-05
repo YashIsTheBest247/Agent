@@ -1,18 +1,10 @@
 import { cn } from "@/lib/utils";
 
 /**
- * A lime tile carrying a sheet of paper and the arrow that turns it back over.
- * Sized in a 32-unit box so it stays crisp at nav and favicon scale.
+ * Two seats: the lead, and the one beside it. The second chair does the
+ * preparation; the lead signs. Sized in a 32-unit box so it holds at nav scale.
  */
-export function LogoMark({
-  className,
-  tile = "var(--lime)",
-  glyph = "var(--ink)",
-}: {
-  className?: string;
-  tile?: string;
-  glyph?: string;
-}) {
+export function LogoMark({ className }: { className?: string }) {
   return (
     <svg
       width="26"
@@ -20,29 +12,16 @@ export function LogoMark({
       viewBox="0 0 32 32"
       fill="none"
       role="img"
-      aria-label="Overturn"
+      aria-label="Second Chair"
       className={className}
     >
-      <rect x="1.5" y="1.5" width="29" height="29" rx="7" fill={tile} />
-      <g fill={glyph}>
-        {/* The denial letter. */}
-        <path d="M9 6.6h9.6L23 11v9.2a1.2 1.2 0 0 1-1.2 1.2H9a1.2 1.2 0 0 1-1.2-1.2V7.8A1.2 1.2 0 0 1 9 6.6Z" opacity="0.28" />
-        <path
-          d="M9.4 7.8h8.4l3.8 3.8v8.2H9.4V7.8Z"
-          stroke={glyph}
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-          fill="none"
-        />
-        {/* The turn. */}
-        <path
-          d="M11.6 25.4a6 6 0 0 0 9.9-3.1"
-          stroke={glyph}
-          strokeWidth="2"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path d="M9.2 22.2 14 23.4l-2.2 3.4-2.6-4.6Z" />
+      <rect x="1.5" y="1.5" width="29" height="29" rx="7" fill="var(--lime)" />
+      <g fill="var(--ink)">
+        {/* The lead — taller, and only outlined. */}
+        <rect x="7.5" y="7.5" width="6.5" height="17" rx="2.2" opacity="0.3" />
+        {/* The second chair — shorter, solid, and doing the work. */}
+        <rect x="17.2" y="12" width="7.3" height="12.5" rx="2.2" />
+        <rect x="7.5" y="21.6" width="17" height="2.9" rx="1.45" />
       </g>
     </svg>
   );
@@ -66,7 +45,7 @@ export function Logo({
             tone === "light" ? "text-[var(--lime)]" : "text-[var(--ink)]",
           )}
         >
-          Overturn
+          Second Chair
         </span>
         <span
           className={cn(
@@ -74,7 +53,7 @@ export function Logo({
             tone === "light" ? "text-white/60" : "text-[var(--text-3)]",
           )}
         >
-          Appeals desk
+          Three desks
         </span>
       </span>
     </span>

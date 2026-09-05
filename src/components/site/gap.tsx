@@ -1,7 +1,7 @@
 /**
- * The editorial statement of the problem — one long paragraph where the first
- * sentence carries full contrast and the rest drops back, so the eye gets the
- * claim immediately and the argument on a second pass.
+ * The editorial statement of the problem — the first sentence at full
+ * contrast, the argument dropped back, so the claim lands on the first pass
+ * and the reasoning on the second.
  */
 export function Gap() {
   return (
@@ -15,16 +15,18 @@ export function Gap() {
         </div>
         <p className="max-w-3xl text-[clamp(1.35rem,2.6vw,2rem)] leading-[1.32] tracking-[-0.01em]">
           <span className="text-[var(--text)]">
-            A denial letter is written to be difficult to argue with, and to
-            arrive when you have the least energy to try.
+            Between something arriving and someone answering it properly sits
+            work that nobody has automated, because getting it wrong is
+            expensive and getting it right is dull.
           </span>{" "}
           <span className="text-[var(--text-3)]">
-            It names no specific plan provision. It cites criteria it does not
-            enclose. It gives you a window measured in weeks, buried in a
-            paragraph on the reverse. Appealing means reading a policy document
-            you have never opened, matching it against a clinical record you do
-            not hold, and writing a letter in a register you have never had to
-            use. Almost nobody does it. Of the people who do, a great many win.
+            A denial letter written to be difficult to argue with. A site visit
+            that has to become a number you are bound to by Friday. A purchase
+            order three replies down a thread, which somebody will rekey by
+            hand. Each ends in a document a person has to sign, where a
+            plausible invention costs more than an honest gap — which is exactly
+            the shape of work that general-purpose AI does worst, and the reason
+            every desk here is built around something that is not a model.
           </span>
         </p>
       </div>

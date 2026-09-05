@@ -4,7 +4,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
 import { playbookFor } from "@/lib/domain/taxonomy";
-import { caseStore } from "@/lib/store";
+import { caseStore, isPersistent } from "@/lib/store";
 import { cn, daysUntil } from "@/lib/utils";
 
 export const metadata = { title: "My cases" };
@@ -12,6 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CasesPage() {
   const cases = await caseStore.list();
+  const persisted = isPersistent();
 
   return (
     <div className="mx-auto max-w-[1240px]">
@@ -115,7 +116,9 @@ export default async function CasesPage() {
       )}
 
       <p className="mt-8 text-[12px] leading-relaxed text-[var(--text-3)]">
-        Cases are held in this server process, so they clear when it restarts.
+        {persisted
+          ? "Cases are written to disk, so they survive a restart. Deleting one removes the documents and everything derived from them."
+          : "Cases are held in this server process only, so they clear when it restarts or moves instance."}
         Durable storage is the next thing to wire in.
       </p>
     </div>

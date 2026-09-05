@@ -9,7 +9,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { AgentTimeline } from "@/components/case/agent-timeline";
-import { QuoteApproveBar } from "@/components/quote/quote-approve-bar";
+import { ApprovalBar } from "@/components/ui/approval-bar";
 import { QuoteMoney } from "@/components/quote/quote-money";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
@@ -244,10 +244,17 @@ export default async function QuotePage({
 
       {/* ---- Approval gate ---- */}
       {doc && (record.status === "needs_review" || record.status === "approved") ? (
-        <QuoteApproveBar
-          quoteId={record.id}
-          documentText={plainText}
+        <ApprovalBar
+          recordId={record.id}
+          basePath="/api/quotes"
+          listPath="/quotes"
+          copyText={plainText}
           approvedAt={record.approvedAt}
+          copyLabel="Copy quote"
+          headline="Nothing has been sent"
+          blurb="Check the lines against your book and the exclusions against the job. Approving records that you have read it — the desk never contacts your customer."
+          approvedHeadline="You approved this quote"
+          approvedBlurb="Copy it into your own template, or send it as it stands."
         />
       ) : null}
 

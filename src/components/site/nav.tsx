@@ -6,9 +6,10 @@ import { Logo } from "@/components/site/logo";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { label: "The crew", href: "/#crew" },
-  { label: "How it works", href: "/#how" },
-  { label: "What you get", href: "/#results" },
+  { label: "Appeals", href: "/cases" },
+  { label: "Quoting", href: "/quotes" },
+  { label: "Orders", href: "/orders" },
+  { label: "How it works", href: "/#method" },
   { label: "Safeguards", href: "/#safeguards" },
 ] as const;
 
@@ -38,7 +39,7 @@ export function Nav() {
       )}
     >
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
-        <Link href="/" className="press shrink-0" aria-label="Overturn home">
+        <Link href="/" className="press shrink-0" aria-label="Second Chair home">
           <Logo tone={solid ? "ink" : "light"} />
         </Link>
 
@@ -61,18 +62,7 @@ export function Nav() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="/cases"
-            className={cn(
-              "press hidden text-[13.5px] transition-colors sm:inline-flex",
-              solid
-                ? "text-[var(--text-2)] hover:text-[var(--ink)]"
-                : "text-white/80 hover:text-white",
-            )}
-          >
-            My cases
-          </Link>
-          <Link
-            href="/cases/new"
+            href="/#desks"
             className={cn(
               "press pill hidden sm:inline-flex",
               solid
@@ -80,7 +70,7 @@ export function Nav() {
                 : "border border-white/35 bg-white/12 text-white backdrop-blur-sm hover:bg-white/20",
             )}
           >
-            Appeal a denial
+            Pick a desk
           </Link>
           <button
             type="button"
@@ -121,7 +111,7 @@ export function Nav() {
         className="border-t border-[var(--line-ink)] bg-[var(--ink)] px-5 pt-2 pb-5 md:hidden"
       >
         <ul className="flex flex-col">
-          {[...links, { label: "My cases", href: "/cases" }].map((l) => (
+          {links.map((l) => (
             <li key={l.href}>
               <Link
                 href={l.href}
@@ -134,11 +124,11 @@ export function Nav() {
           ))}
         </ul>
         <Link
-          href="/cases/new"
+          href="/#desks"
           onClick={() => setOpen(false)}
           className="pill pill-lime mt-4 w-full justify-center"
         >
-          Appeal a denial
+          Pick a desk
         </Link>
       </div>
     </header>

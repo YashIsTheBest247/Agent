@@ -1,7 +1,7 @@
 {
-  "name": "overturn",
+  "name": "second-chair",
   "version": "0.1.0",
-  "description": "",
+  "description": "Three desks of AI agents for work that ends in a document somebody has to sign.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

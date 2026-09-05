@@ -1,10 +1,8 @@
 import { Nav } from "@/components/site/nav";
 import { Hero } from "@/components/site/hero";
 import { Gap } from "@/components/site/gap";
-import { Numbers } from "@/components/site/numbers";
-import { Crew } from "@/components/site/crew";
-import { HowItWorks } from "@/components/site/how-it-works";
-import { Results } from "@/components/site/results";
+import { Desks } from "@/components/site/desks";
+import { Method } from "@/components/site/method";
 import { Safeguards } from "@/components/site/safeguards";
 import { Cta } from "@/components/site/cta";
 
@@ -15,10 +13,8 @@ export default function HomePage() {
       <main>
         <Hero />
         <Gap />
-        <Numbers />
-        <Crew />
-        <HowItWorks />
-        <Results />
+        <Desks />
+        <Method />
         <Safeguards />
         <Cta />
       </main>

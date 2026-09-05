@@ -10,8 +10,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { AgentTimeline } from "@/components/case/agent-timeline";
-import { ApproveBar } from "@/components/case/approve-bar";
-import { DeleteCase } from "@/components/case/delete-case";
+import { ApprovalBar } from "@/components/ui/approval-bar";
 import { DraftView } from "@/components/case/draft-view";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
@@ -63,7 +62,7 @@ export default async function CasePage({
   const amount = facts?.patientResponsibilityCents.value ?? facts?.billedAmountCents.value;
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-5">
+    <div className="mx-auto flex max-w-[1240px] flex-col gap-5">
       {/* ---- Header ---- */}
       <header className="rounded-[var(--r-lg)] bg-white p-6 ring-1 ring-[var(--line)] sm:p-8">
         <div className="flex flex-wrap items-center gap-2">
@@ -163,10 +162,17 @@ export default async function CasePage({
 
       {/* ---- Approval gate ---- */}
       {draft && (record.status === "needs_review" || record.status === "approved") ? (
-        <ApproveBar
-          caseId={record.id}
-          letter={`${draft.recipientBlock}\n\n${draft.subject}\n\n${draft.body}`}
+        <ApprovalBar
+          recordId={record.id}
+          basePath="/api/cases"
+          listPath="/cases"
+          copyText={`${draft.recipientBlock}\n\n${draft.subject}\n\n${draft.body}`}
           approvedAt={record.approvedAt}
+          copyLabel="Copy letter"
+          headline="Nothing has been sent"
+          blurb="Read the letter and check the quotes. Approving records that you have reviewed it — the desk never contacts your insurer."
+          approvedHeadline="You approved this draft"
+          approvedBlurb="Copy the letter, attach the checklist items, and file it by the route below."
         />
       ) : null}
 
@@ -356,13 +362,12 @@ export default async function CasePage({
 
       <div className="flex flex-col gap-4 border-t border-[var(--line)] pt-6 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-[12px] text-[var(--text-3)]">
-          Overturn is not a law firm, insurer, or medical provider, and this is
-          not legal or medical advice.{" "}
+          Second Chair is not a law firm, insurer, or medical provider, and this
+          is not legal or medical advice.{" "}
           <Link href="/#safeguards" className="underline hover:text-[var(--text)]">
             How this is kept honest
           </Link>
         </p>
-        <DeleteCase caseId={record.id} />
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { ArrowUpRight, Ruler } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { priceBookById } from "@/lib/desks/quotes/price-books";
-import { quoteStore } from "@/lib/store";
+import { quoteStore, isPersistent } from "@/lib/store";
 import { formatMoney } from "@/lib/utils";
 
 export const metadata = { title: "My quotes" };
@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function QuotesPage() {
   const quotes = await quoteStore.list();
+  const persisted = isPersistent();
 
   return (
     <div className="mx-auto max-w-[1240px]">
@@ -93,7 +94,9 @@ export default async function QuotesPage() {
       )}
 
       <p className="mt-8 font-mono text-[10px] leading-relaxed tracking-[0.1em] text-[var(--text-3)] uppercase">
-        Quotes are held in this server process, so they clear when it restarts.
+        {persisted
+          ? "Quotes are written to disk, so they survive a restart. Deleting one removes the documents and everything derived from them."
+          : "Quotes are held in this server process only, so they clear when it restarts or moves instance."}
       </p>
     </div>
   );

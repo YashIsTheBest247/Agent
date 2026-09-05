@@ -26,20 +26,20 @@ export function Cta() {
 
         <div className="relative flex flex-col gap-8 px-6 py-16 sm:px-14 sm:py-20 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
-            <div className="eyebrow text-white/50">The clock</div>
+            <div className="eyebrow text-white/50">Start</div>
             <h2 className="mt-3 text-[clamp(1.9rem,4.6vw,3.2rem)] leading-[1.02]">
-              <span className="display text-[var(--lime)]">Your deadline is shorter than you </span>
-              <span className="script text-white">think</span>
+              <span className="display text-[var(--lime)]">Pick the problem you actually </span>
+              <span className="script text-white">have</span>
             </h2>
             <p className="mt-5 text-[14px] leading-relaxed text-white/80">
-              Most internal appeal windows close within 180 days of the denial —
-              some in 60. Upload the letter and find out where you stand before
-              yours closes.
+              A denial letter, a site walk, or an order buried in a thread. Each
+              desk takes what you already have and gives back something you can
+              read, check and sign.
             </p>
           </div>
 
-          <Link href="/cases/new" className="press pill pill-lime shrink-0">
-            Appeal a denial
+          <Link href="/#desks" className="press pill pill-lime shrink-0">
+            Pick a desk
           </Link>
         </div>
       </div>

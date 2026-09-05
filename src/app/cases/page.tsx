@@ -5,13 +5,16 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
 import { playbookFor } from "@/lib/domain/taxonomy";
 import { caseStore, isPersistent } from "@/lib/store";
+import { requireUser } from "@/lib/auth/guard";
 import { cn, daysUntil } from "@/lib/utils";
 
 export const metadata = { title: "My cases" };
 export const dynamic = "force-dynamic";
 
 export default async function CasesPage() {
-  const cases = await caseStore.list();
+  const user = await requireUser("/cases");
+  const all = await caseStore.list();
+  const cases = all.filter((r) => r.userId === user.id);
   const persisted = isPersistent();
 
   return (

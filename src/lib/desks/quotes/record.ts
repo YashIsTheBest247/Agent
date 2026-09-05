@@ -43,6 +43,8 @@ export type QuoteRecord = {
   createdAt: string;
   updatedAt: string;
   status: QuoteStatus;
+  /** Who this belongs to. Every read is checked against it. */
+  userId: string;
 
   priceBookId: string;
   customerName: string;
@@ -67,6 +69,7 @@ export type QuoteRecord = {
 
 export function emptyQuote(
   id: string,
+  userId: string,
   priceBookId: string,
   customerName: string,
   files: QuoteFileRef[],
@@ -74,6 +77,7 @@ export function emptyQuote(
   const now = new Date().toISOString();
   return {
     id,
+    userId,
     createdAt: now,
     updatedAt: now,
     status: "queued",

@@ -1,8 +1,13 @@
 import { DeskHeader } from "@/components/site/desk-header";
+import { requireUser } from "@/lib/auth/guard";
 
-export default function QuotesLayout({
+export default async function QuotesLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Guarding the layout covers every page beneath it, so a new route under
+  // /quotes cannot be added unprotected by accident.
+  const user = await requireUser("/quotes");
+
   return (
     <div className="min-h-dvh">
       <DeskHeader
@@ -11,6 +16,7 @@ export default function QuotesLayout({
         listLabel="My quotes"
         newHref="/quotes/new"
         newLabel="New quote"
+        userName={user.name}
       />
       <main className="px-5 py-12 sm:py-16">{children}</main>
     </div>

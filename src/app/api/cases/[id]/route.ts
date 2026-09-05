@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { caseStore } from "@/lib/store";
+import { ownedBy, requireApiUser } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 
@@ -7,8 +8,11 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
   const { id } = await params;
-  const record = await caseStore.get(id);
+  const record = ownedBy(await caseStore.get(id), guard.user);
 
   if (!record) {
     return NextResponse.json({ error: "No such case." }, { status: 404 });
@@ -20,7 +24,11 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
   const { id } = await params;
-  await caseStore.remove(id);
+  // Only delete what the caller owns; a stranger's id is a silent no-op.
+  if (ownedBy(await caseStore.get(id), guard.user)) await caseStore.remove(id);
   return NextResponse.json({ ok: true });
 }

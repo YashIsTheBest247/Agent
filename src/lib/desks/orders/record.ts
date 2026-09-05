@@ -41,6 +41,8 @@ export type OrderRecord = {
   createdAt: string;
   updatedAt: string;
   status: OrderStatus;
+  /** Who this belongs to. Every read is checked against it. */
+  userId: string;
 
   catalogId: string;
   emailText: string;
@@ -62,6 +64,7 @@ export type OrderRecord = {
 
 export function emptyOrder(
   id: string,
+  userId: string,
   catalogId: string,
   emailText: string,
   files: OrderFileRef[],
@@ -69,6 +72,7 @@ export function emptyOrder(
   const now = new Date().toISOString();
   return {
     id,
+    userId,
     createdAt: now,
     updatedAt: now,
     status: "queued",

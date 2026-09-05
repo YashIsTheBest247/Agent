@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireApiUser } from "@/lib/auth/guard";
 import { runQuotePipeline, type QuoteUpload } from "@/lib/desks/quotes/orchestrator";
 import { emptyQuote, type QuoteFileRef } from "@/lib/desks/quotes/record";
 import { defaultPriceBookId, priceBooks } from "@/lib/desks/quotes/price-books";
@@ -33,7 +34,11 @@ const ACCEPTED = [
 ];
 
 export async function GET() {
-  const quotes = await quoteStore.list();
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
+  const all = await quoteStore.list();
+  const quotes = all.filter((r) => r.userId === guard.user.id);
   return NextResponse.json({
     quotes: quotes.map((q) => ({
       id: q.id,
@@ -48,6 +53,9 @@ export async function GET() {
 
 /** Creates a quote and streams the run back as it happens. */
 export async function POST(request: Request) {
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
   if (!isGeminiConfigured()) {
     return NextResponse.json(
       {
@@ -121,6 +129,7 @@ export async function POST(request: Request) {
 
   const record = emptyQuote(
     newQuoteId(),
+    guard.user.id,
     priceBookId,
     customerName || "Unnamed job",
     refs,

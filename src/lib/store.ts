@@ -61,7 +61,7 @@ function safeId(id: string): string | null {
   return /^[A-Za-z0-9_-]{1,128}$/.test(id) ? id : null;
 }
 
-function createStore<T extends Stored>(namespace: string): RecordStore<T> {
+export function createStore<T extends Stored>(namespace: string): RecordStore<T> {
   const index = (namespaces.get(namespace) ??
     namespaces.set(namespace, new Map()).get(namespace)!) as Map<string, T>;
   const dir = path.join(dataRoot, namespace);

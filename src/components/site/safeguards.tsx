@@ -15,7 +15,7 @@ const safeguards = [
   },
   {
     title: "Your documents, and a way to remove them",
-    body: "Uploads go to the Gemini API to be read and are held only for the life of the record. Deleting one removes the documents and everything derived from them.",
+    body: "Records belong to your account and are not readable by anyone else. Uploads go to the Gemini API to be read, and deleting a record removes the documents and everything derived from them.",
   },
 ];
 

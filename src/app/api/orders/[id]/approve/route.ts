@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { orderStore } from "@/lib/store";
+import { ownedBy, requireApiUser } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 
@@ -12,8 +13,11 @@ export async function POST(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
   const { id } = await params;
-  const record = await orderStore.get(id);
+  const record = ownedBy(await orderStore.get(id), guard.user);
 
   if (!record) {
     return NextResponse.json({ error: "No such order." }, { status: 404 });

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireApiUser } from "@/lib/auth/guard";
 import { runAppealPipeline, type UploadedFile } from "@/lib/agents/orchestrator";
 import { emptyCase } from "@/lib/domain/case";
 import { isGeminiConfigured } from "@/lib/gemini/client";
@@ -20,7 +21,11 @@ const ACCEPTED = [
 ];
 
 export async function GET() {
-  const cases = await caseStore.list();
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
+  const all = await caseStore.list();
+  const cases = all.filter((r) => r.userId === guard.user.id);
   return NextResponse.json({
     cases: cases.map((c) => ({
       id: c.id,
@@ -42,6 +47,9 @@ export async function GET() {
  * also exactly what the user is watching on screen.
  */
 export async function POST(request: Request) {
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
   if (!isGeminiConfigured()) {
     return NextResponse.json(
       {
@@ -101,7 +109,7 @@ export async function POST(request: Request) {
     });
   }
 
-  const record = emptyCase(newCaseId(), []);
+  const record = emptyCase(newCaseId(), guard.user.id, []);
   await caseStore.put(record);
 
   const encoder = new TextEncoder();

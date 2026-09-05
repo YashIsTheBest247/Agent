@@ -15,6 +15,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
 import { priceBookById } from "@/lib/desks/quotes/price-books";
 import { quoteStore } from "@/lib/store";
+import { ownedBy, requireUser } from "@/lib/auth/guard";
 import { cn, formatMoney } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -121,7 +122,9 @@ export default async function QuotePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const record = await quoteStore.get(id);
+  const user = await requireUser(`/quotes/${id}`);
+  // notFound for someone else's record too, so an id cannot be probed.
+  const record = ownedBy(await quoteStore.get(id), user);
   if (!record) notFound();
 
   const book = priceBookById(record.priceBookId);

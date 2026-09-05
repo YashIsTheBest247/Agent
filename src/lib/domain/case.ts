@@ -42,6 +42,8 @@ export type CaseRecord = {
   createdAt: string;
   updatedAt: string;
   status: CaseStatus;
+  /** Who this belongs to. Every read is checked against it. */
+  userId: string;
 
   documents: SourceDocument[];
   citations: Citation[];
@@ -67,10 +69,15 @@ export type CaseRecord = {
   approvedAt: string | null;
 };
 
-export function emptyCase(id: string, documents: SourceDocument[]): CaseRecord {
+export function emptyCase(
+  id: string,
+  userId: string,
+  documents: SourceDocument[],
+): CaseRecord {
   const now = new Date().toISOString();
   return {
     id,
+    userId,
     createdAt: now,
     updatedAt: now,
     status: "queued",

@@ -4,13 +4,16 @@ import { ButtonLink } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { priceBookById } from "@/lib/desks/quotes/price-books";
 import { quoteStore, isPersistent } from "@/lib/store";
+import { requireUser } from "@/lib/auth/guard";
 import { formatMoney } from "@/lib/utils";
 
 export const metadata = { title: "My quotes" };
 export const dynamic = "force-dynamic";
 
 export default async function QuotesPage() {
-  const quotes = await quoteStore.list();
+  const user = await requireUser("/quotes");
+  const all = await quoteStore.list();
+  const quotes = all.filter((r) => r.userId === user.id);
   const persisted = isPersistent();
 
   return (

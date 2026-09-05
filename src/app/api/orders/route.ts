@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireApiUser } from "@/lib/auth/guard";
 import { runOrderPipeline, type OrderUpload } from "@/lib/desks/orders/orchestrator";
 import { emptyOrder, type OrderFileRef } from "@/lib/desks/orders/record";
 import { catalogs, defaultCatalogId } from "@/lib/desks/orders/catalogs";
@@ -23,7 +24,11 @@ const ACCEPTED = [
 ];
 
 export async function GET() {
-  const orders = await orderStore.list();
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
+  const all = await orderStore.list();
+  const orders = all.filter((r) => r.userId === guard.user.id);
   return NextResponse.json({
     orders: orders.map((o) => ({
       id: o.id,
@@ -39,6 +44,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const guard = await requireApiUser();
+  if (!guard.ok) return guard.response;
+
   if (!isGeminiConfigured()) {
     return NextResponse.json(
       {
@@ -107,7 +115,7 @@ export async function POST(request: Request) {
     refs.push({ filename: file.name, mimeType, bytes: file.size });
   }
 
-  const record = emptyOrder(newOrderId(), catalogId, emailText, refs);
+  const record = emptyOrder(newOrderId(), guard.user.id, catalogId, emailText, refs);
   await orderStore.put(record);
 
   const encoder = new TextEncoder();

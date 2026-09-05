@@ -16,6 +16,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
 import { playbookFor } from "@/lib/domain/taxonomy";
 import { caseStore } from "@/lib/store";
+import { ownedBy, requireUser } from "@/lib/auth/guard";
 import { cn, daysUntil, formatMoney } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -53,7 +54,9 @@ export default async function CasePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const record = await caseStore.get(id);
+  const user = await requireUser(`/cases/${id}`);
+  // notFound for someone else's record too, so an id cannot be probed.
+  const record = ownedBy(await caseStore.get(id), user);
   if (!record) notFound();
 
   const { facts, classification, strategy, draft, review, filing, audit } = record;

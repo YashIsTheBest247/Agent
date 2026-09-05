@@ -5,13 +5,16 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
 import { catalogById } from "@/lib/desks/orders/catalogs";
 import { orderStore, isPersistent } from "@/lib/store";
+import { requireUser } from "@/lib/auth/guard";
 import { formatMoney } from "@/lib/utils";
 
 export const metadata = { title: "My orders" };
 export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
-  const orders = await orderStore.list();
+  const user = await requireUser("/orders");
+  const all = await orderStore.list();
+  const orders = all.filter((r) => r.userId === user.id);
   const persisted = isPersistent();
 
   return (

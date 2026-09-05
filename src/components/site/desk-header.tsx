@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/site/logo";
 import { ButtonLink } from "@/components/ui/button";
+import { AccountMenu } from "@/components/auth/account-menu";
 
 /** Shared chrome for every desk's workspace, so they read as one product. */
 export function DeskHeader({
@@ -9,12 +10,14 @@ export function DeskHeader({
   listLabel,
   newHref,
   newLabel,
+  userName,
 }: {
   desk: string;
   listHref: string;
   listLabel: string;
   newHref: string;
   newLabel: string;
+  userName: string;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[var(--paper)]/92 backdrop-blur-md">
@@ -39,6 +42,7 @@ export function DeskHeader({
           <ButtonLink href={newHref} variant="lime" size="sm">
             {newLabel}
           </ButtonLink>
+          <AccountMenu name={userName} />
         </nav>
       </div>
     </header>

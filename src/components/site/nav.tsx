@@ -18,7 +18,13 @@ const links = [
  * scrolls past it — so the lime wordmark reads on the image and the ink
  * wordmark reads on paper.
  */
-export function Nav() {
+export function Nav({
+  signedIn = false,
+  userName,
+}: {
+  signedIn?: boolean;
+  userName?: string;
+}) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -61,8 +67,21 @@ export function Nav() {
         </div>
 
         <div className="flex items-center gap-2">
+          {signedIn ? null : (
+            <Link
+              href="/signin"
+              className={cn(
+                "press hidden text-[13.5px] transition-colors sm:inline-flex",
+                solid
+                  ? "text-[var(--text-2)] hover:text-[var(--ink)]"
+                  : "text-white/80 hover:text-white",
+              )}
+            >
+              Sign in
+            </Link>
+          )}
           <Link
-            href="/#desks"
+            href={signedIn ? "/#desks" : "/signup"}
             className={cn(
               "press pill hidden sm:inline-flex",
               solid
@@ -70,7 +89,7 @@ export function Nav() {
                 : "border border-white/35 bg-white/12 text-white backdrop-blur-sm hover:bg-white/20",
             )}
           >
-            Pick a desk
+            {signedIn ? "Pick a desk" : "Get started"}
           </Link>
           <button
             type="button"
@@ -124,11 +143,11 @@ export function Nav() {
           ))}
         </ul>
         <Link
-          href="/#desks"
+          href={signedIn ? "/#desks" : "/signup"}
           onClick={() => setOpen(false)}
           className="pill pill-lime mt-4 w-full justify-center"
         >
-          Pick a desk
+          {signedIn ? `Signed in as ${userName ?? "you"}` : "Get started — free"}
         </Link>
       </div>
     </header>

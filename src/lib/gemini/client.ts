@@ -50,10 +50,37 @@ export function isGeminiConfigured(): boolean {
   return Boolean(process.env.GEMINI_API_KEY);
 }
 
+/**
+ * Defaults are Flash on both tiers because a free Gemini key has no Pro
+ * quota — Pro returns 429 immediately. Point GEMINI_MODEL_REASONING at a Pro
+ * model if your key has the quota for it; the tier split is real either way,
+ * since the reasoning tier gets a newer and slower model.
+ */
 export function modelFor(tier: ModelTier): string {
   return tier === "reasoning"
-    ? (process.env.GEMINI_MODEL_REASONING ?? "gemini-2.5-pro")
-    : (process.env.GEMINI_MODEL_FAST ?? "gemini-2.5-flash");
+    ? (process.env.GEMINI_MODEL_REASONING ?? "gemini-3.6-flash")
+    : (process.env.GEMINI_MODEL_FAST ?? "gemini-3.5-flash");
+}
+
+/**
+ * The models to try, in order, for one tier.
+ *
+ * Free-tier quota is counted per model per day, so a spent allowance on the
+ * primary is not a spent allowance overall. Falling through to the next model
+ * turns a run that would have died mid-pipeline into one that finishes on a
+ * slightly different model — which is a far better outcome than a half-built
+ * appeal against a deadline.
+ */
+export function modelChain(tier: ModelTier): string[] {
+  const primary = modelFor(tier);
+  const configured = process.env.GEMINI_MODEL_FALLBACKS?.trim();
+  const fallbacks = (
+    configured ? configured.split(",") : ["gemini-3.5-flash", "gemini-3.1-flash-lite"]
+  )
+    .map((m) => m.trim())
+    .filter(Boolean);
+
+  return [primary, ...fallbacks.filter((m) => m !== primary)];
 }
 
 export type TokenUsage = {
@@ -87,11 +114,36 @@ export type GenerateOptions = {
   temperature?: number;
   maxOutputTokens?: number;
   signal?: AbortSignal;
-  /** Transient-failure retries, on top of the first attempt. */
+  /**
+   * Transient-failure retries, on top of the first attempt. The free tier
+   * returns 503 "high demand" often enough that this needs headroom.
+   */
   maxRetries?: number;
 };
 
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
+
+/**
+ * A 429 is usually a burst to be waited out, but a *daily* quota is not — no
+ * amount of backoff clears it before midnight. Retrying one burns four rounds
+ * of sleep and buries the real cause under a generic failure, so it is
+ * detected and surfaced as-is.
+ */
+export function isDailyQuotaExhausted(message: string): boolean {
+  return /PerDay|per day|generate_content_free_tier_requests/i.test(message);
+}
+
+/** Turns Google's quota payload into something a person can act on. */
+function quotaAdvice(message: string): string {
+  const model = /model:\s*([\w.-]+)/.exec(message)?.[1];
+  const limit = /limit:\s*(\d+)/.exec(message)?.[1];
+  return [
+    "Daily Gemini quota exhausted",
+    model ? ` for ${model}` : "",
+    limit ? ` (free tier allows ${limit} requests a day)` : "",
+    ". Runs will work again tomorrow, or immediately on a key with paid quota.",
+  ].join("");
+}
 
 function describeError(error: unknown): {
   message: string;
@@ -132,11 +184,11 @@ export async function generateStructured(
     temperature = tier === "reasoning" ? 0.35 : 0.1,
     maxOutputTokens = 8192,
     signal,
-    maxRetries = 2,
+    maxRetries = 4,
   } = options;
 
   const ai = getClient();
-  const model = modelFor(tier);
+  const chain = modelChain(tier);
   const startedAt = Date.now();
 
   const contents = attachments?.length
@@ -155,7 +207,10 @@ export async function generateStructured(
 
   let lastError: GeminiRequestError | null = null;
 
-  for (let attempt = 1; attempt <= maxRetries + 1; attempt += 1) {
+  // Outer loop walks the model chain; inner loop retries transient failures on
+  // the current model. Only an exhausted daily quota advances the chain.
+  for (const model of chain) {
+   for (let attempt = 1; attempt <= maxRetries + 1; attempt += 1) {
     try {
       const response = await ai.models.generateContent({
         model,
@@ -195,6 +250,14 @@ export async function generateStructured(
       if (signal?.aborted) throw error;
 
       const { message, status } = describeError(error);
+
+      if (status === 429 && isDailyQuotaExhausted(message)) {
+        // No backoff clears a daily cap. Move to the next model in the chain;
+        // if this was the last one, the error stands.
+        lastError = new GeminiRequestError(quotaAdvice(message), 429, false);
+        break;
+      }
+
       const retryable =
         error instanceof GeminiRequestError
           ? error.retryable
@@ -203,9 +266,15 @@ export async function generateStructured(
       lastError = new GeminiRequestError(message, status, retryable);
       if (!retryable || attempt > maxRetries) break;
 
-      // 0.6s, 1.8s — enough to clear a rate-limit burst without stalling a run.
-      await sleep(600 * 3 ** (attempt - 1));
+      // 0.8s, 2.4s, 7.2s, 21.6s, with jitter so parallel agents that hit the
+      // same capacity wall do not retry in lockstep and collide again.
+      const backoff = 800 * 3 ** (attempt - 1);
+      await sleep(backoff + Math.random() * backoff * 0.25);
     }
+   }
+
+   // A non-retryable failure that is not a quota wall applies to every model.
+   if (lastError && !lastError.retryable && lastError.status !== 429) break;
   }
 
   throw (

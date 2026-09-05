@@ -9,6 +9,7 @@ import {
   triageAgent,
 } from "./agents";
 import { catalogById } from "./catalogs";
+import { getUserCatalog } from "@/lib/desks/user-data";
 import { describeResolution, resolveOrder } from "./resolve";
 import type { OrderRecord } from "./record";
 
@@ -39,7 +40,9 @@ export async function runOrderPipeline(
 ): Promise<OrderRecord> {
   const trace = new Trace();
   const ctx: RunContext = { trace, signal: options.signal };
-  const catalog = catalogById(record.catalogId);
+  // A user catalogue is stored against the user, not in the seeded registry.
+  const catalog =
+    (await getUserCatalog(record.userId)) ?? catalogById(record.catalogId);
 
   let current: OrderRecord = { ...record, status: "running" };
 

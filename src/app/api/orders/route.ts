@@ -5,6 +5,7 @@ import { emptyOrder, type OrderFileRef } from "@/lib/desks/orders/record";
 import { catalogs, defaultCatalogId } from "@/lib/desks/orders/catalogs";
 import { isGeminiConfigured } from "@/lib/gemini/client";
 import { newOrderId, orderStore } from "@/lib/store";
+import { catalogForUser } from "@/lib/desks/user-data";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -115,7 +116,17 @@ export async function POST(request: Request) {
     refs.push({ filename: file.name, mimeType, bytes: file.size });
   }
 
-  const record = emptyOrder(newOrderId(), guard.user.id, catalogId, emailText, refs);
+  // Resolve against the user's own catalogue when they have uploaded one.
+  const catalog = await catalogForUser(guard.user.id);
+  const record = emptyOrder(
+    newOrderId(),
+    guard.user.id,
+    catalog.id,
+    catalog.name,
+    catalog.settings.currency,
+    emailText,
+    refs,
+  );
   await orderStore.put(record);
 
   const encoder = new TextEncoder();

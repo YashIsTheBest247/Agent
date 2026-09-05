@@ -12,6 +12,7 @@ type Desk = {
   /** The deterministic check that makes this desk's output trustworthy. */
   gate: string;
   members: string;
+  demoHref: string;
 };
 
 const desks: Desk[] = [
@@ -27,6 +28,7 @@ const desks: Desk[] = [
     gate:
       "Every quotation is searched for in the source document. A draft citing text nobody can find is held back, not handed over.",
     members: "Nine members · one of them code",
+    demoHref: "/demo/appeal",
   },
   {
     n: "02",
@@ -40,6 +42,7 @@ const desks: Desk[] = [
     gate:
       "No agent may name a price. They describe work and quantities; every figure is computed from your own price book in integer arithmetic.",
     members: "Seven members · one of them code",
+    demoHref: "/demo/quote",
   },
   {
     n: "03",
@@ -53,6 +56,7 @@ const desks: Desk[] = [
     gate:
       "Nothing is confirmed that does not resolve to a real SKU, in stock, at the price that customer has actually agreed.",
     members: "Five members · one of them code",
+    demoHref: "/demo/order",
   },
 ];
 
@@ -107,13 +111,18 @@ export function Desks() {
                 </p>
               </div>
 
-              <div className="mt-auto flex items-center justify-between gap-3 pt-6">
+              <div className="mt-auto pt-6">
                 <span className="font-mono text-[9.5px] tracking-[0.12em] text-[var(--text-3)] uppercase">
                   {desk.members}
                 </span>
-                <Link href={desk.href} className="press pill pill-lime">
-                  Open
-                </Link>
+                <div className="mt-3 flex items-center gap-2">
+                  <Link href={desk.demoHref} className="press pill pill-lime flex-1 justify-center">
+                    See a real run
+                  </Link>
+                  <Link href={desk.href} className="press pill pill-ghost">
+                    Open
+                  </Link>
+                </div>
               </div>
             </div>
           </article>

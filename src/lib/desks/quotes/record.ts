@@ -47,6 +47,9 @@ export type QuoteRecord = {
   userId: string;
 
   priceBookId: string;
+  /** Snapshotted so an old quote still renders after the book changes. */
+  priceBookName: string;
+  currency: string;
   customerName: string;
   files: QuoteFileRef[];
 
@@ -71,6 +74,8 @@ export function emptyQuote(
   id: string,
   userId: string,
   priceBookId: string,
+  priceBookName: string,
+  currency: string,
   customerName: string,
   files: QuoteFileRef[],
 ): QuoteRecord {
@@ -82,6 +87,8 @@ export function emptyQuote(
     updatedAt: now,
     status: "queued",
     priceBookId,
+    priceBookName,
+    currency,
     customerName,
     files,
     notes: null,

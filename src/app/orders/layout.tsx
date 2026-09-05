@@ -16,6 +16,8 @@ export default async function OrdersLayout({
         listLabel="My orders"
         newHref="/orders/new"
         newLabel="New order"
+        dataHref="/orders/catalogue"
+        dataLabel="Catalogue"
         userName={user.name}
       />
       <main className="px-5 py-12 sm:py-16">{children}</main>

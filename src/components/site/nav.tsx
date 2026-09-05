@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/site/logo";
+import { AccountMenu } from "@/components/auth/account-menu";
 import { cn } from "@/lib/utils";
 
 const links = [
   { label: "Appeals", href: "/cases" },
   { label: "Quoting", href: "/quotes" },
   { label: "Orders", href: "/orders" },
+  { label: "See a run", href: "/demo" },
   { label: "How it works", href: "/#method" },
   { label: "Safeguards", href: "/#safeguards" },
 ] as const;
@@ -91,6 +93,9 @@ export function Nav({
           >
             {signedIn ? "Pick a desk" : "Get started"}
           </Link>
+          {signedIn && userName ? (
+            <AccountMenu name={userName} tone={solid ? "solid" : "onDark"} />
+          ) : null}
           <button
             type="button"
             aria-expanded={open}

@@ -5,6 +5,7 @@ import { emptyQuote, type QuoteFileRef } from "@/lib/desks/quotes/record";
 import { defaultPriceBookId, priceBooks } from "@/lib/desks/quotes/price-books";
 import { isGeminiConfigured } from "@/lib/gemini/client";
 import { newQuoteId, quoteStore } from "@/lib/store";
+import { priceBookForUser } from "@/lib/desks/user-data";
 
 export const runtime = "nodejs";
 /** Eight stages plus revision rounds. */
@@ -127,10 +128,15 @@ export async function POST(request: Request) {
     refs.push({ filename: file.name, mimeType, bytes: file.size });
   }
 
+  // Price against the user's own book when they have uploaded one.
+  const book = await priceBookForUser(guard.user.id);
+
   const record = emptyQuote(
     newQuoteId(),
     guard.user.id,
-    priceBookId,
+    book.id,
+    book.name,
+    book.currency,
     customerName || "Unnamed job",
     refs,
   );

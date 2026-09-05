@@ -12,6 +12,7 @@ import {
 } from "./agents";
 import { describePricing, priceTakeoff } from "./pricing";
 import { priceBookById } from "./price-books";
+import { getUserPriceBook } from "@/lib/desks/user-data";
 import type { QuoteRecord } from "./record";
 
 /** Revision rounds before the desk stops and hands back what it has. */
@@ -46,7 +47,9 @@ export async function runQuotePipeline(
 ): Promise<QuoteRecord> {
   const trace = new Trace();
   const ctx: RunContext = { trace, signal: options.signal };
-  const book = priceBookById(record.priceBookId);
+  // A user book is stored against the user, not in the seeded registry.
+  const book =
+    (await getUserPriceBook(record.userId)) ?? priceBookById(record.priceBookId);
 
   let current: QuoteRecord = { ...record, status: "running" };
 

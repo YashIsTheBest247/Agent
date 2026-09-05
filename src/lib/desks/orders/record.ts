@@ -45,6 +45,9 @@ export type OrderRecord = {
   userId: string;
 
   catalogId: string;
+  /** Snapshotted so an old order still renders after the catalogue changes. */
+  catalogName: string;
+  currency: string;
   emailText: string;
   files: OrderFileRef[];
 
@@ -66,6 +69,8 @@ export function emptyOrder(
   id: string,
   userId: string,
   catalogId: string,
+  catalogName: string,
+  currency: string,
   emailText: string,
   files: OrderFileRef[],
 ): OrderRecord {
@@ -77,6 +82,8 @@ export function emptyOrder(
     updatedAt: now,
     status: "queued",
     catalogId,
+    catalogName,
+    currency,
     emailText,
     files,
     parsed: null,

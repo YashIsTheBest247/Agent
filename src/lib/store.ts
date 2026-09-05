@@ -4,6 +4,7 @@ import path from "node:path";
 import type { CaseRecord } from "@/lib/domain/case";
 import type { QuoteRecord } from "@/lib/desks/quotes/record";
 import type { OrderRecord } from "@/lib/desks/orders/record";
+import { createSupabaseStore, isSupabaseConfigured } from "./store-supabase";
 
 /**
  * Record storage, one namespace per desk.
@@ -140,9 +141,29 @@ export function createStore<T extends Stored>(namespace: string): RecordStore<T>
   };
 }
 
-export const caseStore = createStore<CaseRecord>("cases");
-export const quoteStore = createStore<QuoteRecord>("quotes");
-export const orderStore = createStore<OrderRecord>("orders");
+/**
+ * Supabase when it is configured, files otherwise.
+ *
+ * The choice is made once, here, because every caller uses the same four
+ * methods and none of them should know or care which is behind them. On Vercel
+ * the filesystem is ephemeral, so Supabase is what makes a deployed record
+ * survive a reload; locally either works.
+ */
+function storeFor<T extends Stored>(namespace: string): RecordStore<T> {
+  return isSupabaseConfigured()
+    ? createSupabaseStore<T>(namespace)
+    : createStore<T>(namespace);
+}
+
+/** What the list pages tell the user about whether their records will last. */
+export function storageKind(): "supabase" | "disk" | "memory" {
+  if (isSupabaseConfigured()) return "supabase";
+  return persistent ? "disk" : "memory";
+}
+
+export const caseStore = storeFor<CaseRecord>("cases");
+export const quoteStore = storeFor<QuoteRecord>("quotes");
+export const orderStore = storeFor<OrderRecord>("orders");
 
 /** Ids carry their desk, so a stray id is obvious in a log or a URL. */
 export function newId(prefix: string): string {

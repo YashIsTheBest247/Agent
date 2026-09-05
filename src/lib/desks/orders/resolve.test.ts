@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveLine, resolveOrder } from "./resolve";
+import { describeResolution, resolveLine, resolveOrder } from "./resolve";
 import { electricalCatalog } from "./catalogs";
 import type { Catalog, ParsedOrder } from "./domain";
 
@@ -256,5 +256,52 @@ describe("resolveOrder", () => {
 
     expect(resolved.clean).toBe(false);
     expect(resolved.anythingConfirmable).toBe(false);
+  });
+});
+
+describe("description noise", () => {
+  // A real run showed intake appending the unit to every description, which
+  // dropped exact matches below the threshold and flagged every correct line.
+  it("treats a trailing parenthetical as noise, not ambiguity", () => {
+    const result = resolveLine(
+      line({ description: "Double socket white (per each)" }),
+      catalog,
+      norbury,
+    );
+
+    expect(result.sku).toBe("SKT-2G-WH");
+    expect(result.confirmable).toBe(true);
+    expect(result.exceptions).toHaveLength(0);
+  });
+
+  it("still flags a genuinely approximate name", () => {
+    const result = resolveLine(
+      line({ description: "double sockett white" }),
+      catalog,
+      norbury,
+    );
+
+    expect(result.exceptions.map((e) => e.code)).toContain("ambiguous_item");
+  });
+});
+
+describe("describeResolution", () => {
+  it("agrees in number for one problem and for several", () => {
+    const one = resolveOrder(
+      order({ lines: [line({ description: "Nothing we stock at all" })] }),
+      catalog,
+    );
+    const many = resolveOrder(
+      order({
+        lines: [
+          line({ id: "n1", description: "Nothing we stock at all" }),
+          line({ id: "n2", description: "MCB type B 16A", quantity: 2 }),
+        ],
+      }),
+      catalog,
+    );
+
+    expect(describeResolution(one)).toContain("1 problem needs a person");
+    expect(describeResolution(many)).toContain("2 problems need a person");
   });
 });

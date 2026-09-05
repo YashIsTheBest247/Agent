@@ -16,6 +16,8 @@ export default async function QuotesLayout({
         listLabel="My quotes"
         newHref="/quotes/new"
         newLabel="New quote"
+        dataHref="/quotes/pricebook"
+        dataLabel="Price book"
         userName={user.name}
       />
       <main className="px-5 py-12 sm:py-16">{children}</main>

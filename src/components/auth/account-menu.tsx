@@ -12,7 +12,14 @@ function initials(name: string): string {
   return (parts[0][0] + (parts[1]?.[0] ?? "")).toUpperCase();
 }
 
-export function AccountMenu({ name }: { name: string }) {
+export function AccountMenu({
+  name,
+  tone = "solid",
+}: {
+  name: string;
+  /** `onDark` for the landing nav while it sits over the hero photograph. */
+  tone?: "solid" | "onDark";
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
@@ -53,7 +60,11 @@ export function AccountMenu({ name }: { name: string }) {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Account: ${name}`}
-        className="press flex h-9 w-9 items-center justify-center rounded-full bg-[var(--ink)] font-mono text-[11px] tracking-[0.06em] text-[var(--lime)] uppercase"
+        className={
+          tone === "onDark"
+            ? "press flex h-9 w-9 items-center justify-center rounded-full border border-white/35 bg-white/15 font-mono text-[11px] tracking-[0.06em] text-white uppercase backdrop-blur-sm hover:bg-white/25"
+            : "press flex h-9 w-9 items-center justify-center rounded-full bg-[var(--ink)] font-mono text-[11px] tracking-[0.06em] text-[var(--lime)] uppercase"
+        }
       >
         {initials(name)}
       </button>

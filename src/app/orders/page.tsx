@@ -3,8 +3,7 @@ import { ArrowUpRight, Inbox } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
-import { catalogById } from "@/lib/desks/orders/catalogs";
-import { orderStore, isPersistent } from "@/lib/store";
+import { orderStore, storageKind } from "@/lib/store";
 import { requireUser } from "@/lib/auth/guard";
 import { formatMoney } from "@/lib/utils";
 
@@ -15,7 +14,7 @@ export default async function OrdersPage() {
   const user = await requireUser("/orders");
   const all = await orderStore.list();
   const orders = all.filter((r) => r.userId === user.id);
-  const persisted = isPersistent();
+  const storage = storageKind();
 
   return (
     <div className="mx-auto max-w-[1240px]">
@@ -57,7 +56,6 @@ export default async function OrdersPage() {
       ) : (
         <ul className="mt-8 flex flex-col gap-3">
           {orders.map((order) => {
-            const catalog = catalogById(order.catalogId);
             const total = order.resolved?.lines.length ?? 0;
             const ok = order.resolved?.confirmable.length ?? 0;
             return (
@@ -96,7 +94,7 @@ export default async function OrdersPage() {
                         </p>
                         <p className="display text-[17px] tracking-[-0.02em]">
                           {formatMoney(order.resolved.confirmedSubtotalCents, {
-                            currency: catalog.settings.currency,
+                            currency: order.currency,
                           })}
                         </p>
                       </div>
@@ -111,9 +109,11 @@ export default async function OrdersPage() {
       )}
 
       <p className="mt-8 font-mono text-[10px] leading-relaxed tracking-[0.1em] text-[var(--text-3)] uppercase">
-        {persisted
-          ? "Orders are written to disk, so they survive a restart. Deleting one removes the documents and everything derived from them."
-          : "Orders are held in this server process only, so they clear when it restarts or moves instance."}
+        {storage === "supabase"
+          ? "Orders are stored durably and survive restarts and redeploys. Deleting one removes the documents and everything derived from them."
+          : storage === "disk"
+            ? "Orders are written to disk on this machine, so they survive a restart."
+            : "Orders are held in this server process only, so they clear when it restarts or moves instance."}
       </p>
     </div>
   );

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { NewCaseFlow } from "@/components/case/new-case-flow";
 import { isGeminiConfigured } from "@/lib/gemini/client";
 
@@ -15,6 +16,14 @@ export default function NewCasePage() {
       <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-[var(--text-2)]">
         Nothing is sent to your insurer at any point. The agents read, research
         and draft; you decide whether a word of it ever leaves this screen.
+      </p>
+
+      <p className="mt-4 text-[13px] text-[var(--text-2)]">
+        Would rather see a finished one first?{" "}
+        <Link href="/demo/appeal" className="underline hover:text-[var(--ink)]">
+          Open a recorded run
+        </Link>
+        .
       </p>
 
       <div className="mt-8">

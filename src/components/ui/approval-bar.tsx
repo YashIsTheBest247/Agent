@@ -76,7 +76,7 @@ export function ApprovalBar({
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-[var(--r-lg)] bg-[var(--ink)] p-5 text-white sm:flex-row sm:items-center sm:justify-between sm:p-6">
+    <div data-print="hide" className="flex flex-col gap-4 rounded-[var(--r-lg)] bg-[var(--ink)] p-5 text-white sm:flex-row sm:items-center sm:justify-between sm:p-6">
       <div className="flex gap-3">
         <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--lime)]" />
         <div>

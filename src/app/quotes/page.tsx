@@ -2,8 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, Ruler } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { priceBookById } from "@/lib/desks/quotes/price-books";
-import { quoteStore, isPersistent } from "@/lib/store";
+import { quoteStore, storageKind } from "@/lib/store";
 import { requireUser } from "@/lib/auth/guard";
 import { formatMoney } from "@/lib/utils";
 
@@ -14,7 +13,7 @@ export default async function QuotesPage() {
   const user = await requireUser("/quotes");
   const all = await quoteStore.list();
   const quotes = all.filter((r) => r.userId === user.id);
-  const persisted = isPersistent();
+  const storage = storageKind();
 
   return (
     <div className="mx-auto max-w-[1240px]">
@@ -55,7 +54,6 @@ export default async function QuotesPage() {
       ) : (
         <ul className="mt-8 flex flex-col gap-3">
           {quotes.map((quote) => {
-            const book = priceBookById(quote.priceBookId);
             return (
               <li key={quote.id}>
                 <Link
@@ -82,7 +80,7 @@ export default async function QuotesPage() {
                         </p>
                         <p className="display text-[17px] tracking-[-0.02em]">
                           {formatMoney(quote.math.totalCents, {
-                            currency: book.currency,
+                            currency: quote.currency,
                           })}
                         </p>
                       </div>
@@ -97,9 +95,11 @@ export default async function QuotesPage() {
       )}
 
       <p className="mt-8 font-mono text-[10px] leading-relaxed tracking-[0.1em] text-[var(--text-3)] uppercase">
-        {persisted
-          ? "Quotes are written to disk, so they survive a restart. Deleting one removes the documents and everything derived from them."
-          : "Quotes are held in this server process only, so they clear when it restarts or moves instance."}
+        {storage === "supabase"
+          ? "Quotes are stored durably and survive restarts and redeploys. Deleting one removes the documents and everything derived from them."
+          : storage === "disk"
+            ? "Quotes are written to disk on this machine, so they survive a restart."
+            : "Quotes are held in this server process only, so they clear when it restarts or moves instance."}
       </p>
     </div>
   );

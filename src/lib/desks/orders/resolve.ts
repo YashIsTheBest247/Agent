@@ -296,7 +296,7 @@ export function describeResolution(resolved: ResolvedOrder): string {
 
   const blocking = resolved.exceptions.filter((e) => e.blocking);
   return [
-    `${ok} of ${total} lines can be confirmed. ${blocking.length} problem${blocking.length === 1 ? "" : "s"} need a person.`,
+    `${ok} of ${total} lines can be confirmed. ${blocking.length} problem${blocking.length === 1 ? " needs" : "s need"} a person.`,
     ...blocking.map((e) => `- ${e.detail}`),
   ].join("\n");
 }

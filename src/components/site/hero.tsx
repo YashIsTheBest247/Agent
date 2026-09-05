@@ -61,10 +61,10 @@ export function Hero() {
                 Pick a desk
               </Link>
               <Link
-                href="/#method"
+                href="/demo"
                 className="press inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2.5 font-mono text-[10px] tracking-[0.16em] text-white uppercase backdrop-blur-sm hover:border-white/70"
               >
-                How it works
+                See a real run
               </Link>
             </div>
           </div>

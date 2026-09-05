@@ -11,6 +11,8 @@ export function DeskHeader({
   newHref,
   newLabel,
   userName,
+  dataHref,
+  dataLabel,
 }: {
   desk: string;
   listHref: string;
@@ -18,6 +20,9 @@ export function DeskHeader({
   newHref: string;
   newLabel: string;
   userName: string;
+  /** The desk's own data — the price book or the catalogue. */
+  dataHref?: string;
+  dataLabel?: string;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[var(--paper)]/92 backdrop-blur-md">
@@ -36,6 +41,11 @@ export function DeskHeader({
         </div>
 
         <nav className="flex items-center gap-2">
+          {dataHref && dataLabel ? (
+            <ButtonLink href={dataHref} variant="ghost" size="sm">
+              {dataLabel}
+            </ButtonLink>
+          ) : null}
           <ButtonLink href={listHref} variant="ghost" size="sm">
             {listLabel}
           </ButtonLink>

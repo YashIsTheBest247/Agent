@@ -4,7 +4,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Pill } from "@/components/ui/pill";
 import { playbookFor } from "@/lib/domain/taxonomy";
-import { caseStore, isPersistent } from "@/lib/store";
+import { caseStore, storageKind } from "@/lib/store";
 import { requireUser } from "@/lib/auth/guard";
 import { cn, daysUntil } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ export default async function CasesPage() {
   const user = await requireUser("/cases");
   const all = await caseStore.list();
   const cases = all.filter((r) => r.userId === user.id);
-  const persisted = isPersistent();
+  const storage = storageKind();
 
   return (
     <div className="mx-auto max-w-[1240px]">
@@ -119,9 +119,11 @@ export default async function CasesPage() {
       )}
 
       <p className="mt-8 text-[12px] leading-relaxed text-[var(--text-3)]">
-        {persisted
-          ? "Cases are written to disk, so they survive a restart. Deleting one removes the documents and everything derived from them."
-          : "Cases are held in this server process only, so they clear when it restarts or moves instance."}
+        {storage === "supabase"
+          ? "Cases are stored durably and survive restarts and redeploys. Deleting one removes the documents and everything derived from them."
+          : storage === "disk"
+            ? "Cases are written to disk on this machine, so they survive a restart."
+            : "Cases are held in this server process only, so they clear when it restarts or moves instance."}
         Durable storage is the next thing to wire in.
       </p>
     </div>

@@ -133,6 +133,13 @@ export function bestCandidate<T>(
   const needle = normalise(query);
   if (!needle) return null;
 
+  // Descriptions routinely carry a parenthetical the catalogue does not:
+  // "double socket white (per each)", "MCB type B 16A (10 pack)". Stripping it
+  // lets an otherwise exact name score as exact, instead of flagging every
+  // correct line for review — a warning on everything is a warning on nothing.
+  const bare = normalise(query.replace(/\([^)]*\)/g, " "));
+  const forms = bare && bare !== needle ? [needle, bare] : [needle];
+
   let best: { candidate: T; score: number; matchedOn: string } | null = null;
 
   for (const candidate of candidates) {
@@ -140,16 +147,21 @@ export function bestCandidate<T>(
       const name = normalise(raw);
       if (!name) continue;
 
-      // A described item often contains the catalogue name plus extra words
-      // ("2 coats of the exterior acrylic, satin"), so containment counts as
-      // a strong signal rather than being punished by the length difference.
-      const contained = needle.includes(name) || name.includes(needle);
-      const score = contained
-        ? Math.max(0.92, similarity(needle, name))
-        : similarity(needle, name);
+      for (const form of forms) {
+        // A described item often contains the catalogue name plus extra words
+        // ("2 coats of the exterior acrylic, satin"), so containment counts as
+        // a strong signal rather than being punished by the length difference.
+        const contained = form.includes(name) || name.includes(form);
+        const score =
+          form === name
+            ? 1
+            : contained
+              ? Math.max(0.92, similarity(form, name))
+              : similarity(form, name);
 
-      if (!best || score > best.score) {
-        best = { candidate, score, matchedOn: raw };
+        if (!best || score > best.score) {
+          best = { candidate, score, matchedOn: raw };
+        }
       }
     }
   }

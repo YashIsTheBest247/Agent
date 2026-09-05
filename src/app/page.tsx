@@ -4,6 +4,7 @@ import { Hero } from "@/components/site/hero";
 import { Gap } from "@/components/site/gap";
 import { Desks } from "@/components/site/desks";
 import { Method } from "@/components/site/method";
+import { Evidence } from "@/components/site/evidence";
 import { Safeguards } from "@/components/site/safeguards";
 import { Cta } from "@/components/site/cta";
 
@@ -20,6 +21,7 @@ export default async function HomePage() {
         <Gap />
         <Desks />
         <Method />
+        <Evidence />
         <Safeguards />
         <Cta />
       </main>

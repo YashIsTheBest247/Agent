@@ -227,3 +227,64 @@ body {
   outline: 2px solid var(--lime-deep);
   outline-offset: 2px;
 }
+
+/* --------------------------------------------------------------------------
+   Print.
+
+   Every desk ends in a document somebody has to send, so "Save as PDF" is the
+   last mile of the product rather than a nicety. The browser's own engine does
+   the typesetting; this only decides what appears and how it breaks.
+   -------------------------------------------------------------------------- */
+@media print {
+  /* Chrome, navigation and anything interactive has no business on paper. */
+  [data-print="hide"],
+  header,
+  nav,
+  button {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  /* Paper is not a viewport: let the document run its natural length. */
+  main {
+    padding: 0 !important;
+  }
+
+  [data-print="page"] {
+    max-width: none !important;
+    gap: 0 !important;
+  }
+
+  /* One card per idea, and never split across a page if it can be helped. */
+  [data-print="block"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-bottom: 1.25rem;
+  }
+
+  [data-print="document"] {
+    break-before: auto;
+  }
+
+  /* A citation marker is meaningless on paper unless the quote comes with it. */
+  [data-print="citation"]::after {
+    content: none;
+  }
+
+  a[href^="/"]::after,
+  a[href^="#"]::after {
+    content: none;
+  }
+
+  @page {
+    margin: 18mm 16mm;
+  }
+}
